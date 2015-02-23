@@ -152,7 +152,16 @@
 
     var data = false;
 
-    var svg = this.getSVG(chartOptions || this.options.exporting && this.options.exporting.chartOptions);
+    var cChartOptions = chartOptions || this.options.exporting && this.options.exporting.chartOptions || {};
+    if(!cChartOptions.chart) {
+      cChartOptions.chart = { width: destWidth, height: destHeight };
+    }
+    else {
+      cChartOptions.chart.width = destWidth;
+      cChartOptions.chart.height = destHeight;
+    }
+
+    var svg = this.getSVG(cChartOptions);
 
     if (type == MIME_TYPES.SVG) {
       data = "data:" + MIME_TYPES.SVG + "," + svg;
@@ -201,7 +210,5 @@
       }
     }
   }
-
-  console.log(H.getOptions().exporting.buttons.contextButton.menuItems);
 
 }(Highcharts));

@@ -37,8 +37,9 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 
 ## Remarks, Issues, Other stuff
 
-* Rasterized images have an aspect ratio issue. I probably made a boo-boo somewhere.
-* This probably won't work on Internet Explorer has it uses HTML5 download feature and opens a data-uri as a fallback. But IE has limited data-uri support so who knows.
+* ~~Rasterized images have an aspect ratio issue. I probably made a boo-boo somewhere.~~ That's fixed.
+* This probably won't work on Internet Explorer has it uses HTML5 download feature and opens a data-uri as a fallback. ~~But IE has limited data-uri support so who knows.~~ Nope, but there are some shim/sham/polyfills so that's possible to do.
+* When exporting into PDF, `sourceWidth` and `sourceHeight` are expressed in millimeters.
 
 ## Credits
 
