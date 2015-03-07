@@ -11,6 +11,8 @@ You may need to export a chart you made using HighCharts to an image or a PDF. I
 * you don't want to set an export server up;
 * you think it's 2015 and FFS, _browsers should be able to do that_.
 
+Additionally, it provides a common interface between the official export module and `export-csv`.
+
 ## Build / Install
 
 Dependencies are not shipped, so you'll have to do the following:
@@ -29,11 +31,12 @@ This module depends on:
 * [HighCharts](http://www.highcharts.com/) obviously, remember guys, it isn't free for commercial usages;
 * its exporting module, that is bundle with it;
 * for rasterized images (PNG, JPEG), a module called `canvas-tools` with is based<sup>1</sup> on [canvg](https://github.com/gabelerner/canvg) licenced under MIT Licence;
-* [jsPDF](https://parall.ax/products/jspdf) (its GitHub page is [overthere](https://github.com/MrRio/jsPDF)) for PDF support, licenced under MIT Licence.
+* [jsPDF](https://parall.ax/products/jspdf) (its GitHub page is [overthere](https://github.com/MrRio/jsPDF)) for PDF support, licenced under MIT Licence;
+* Pseudo-official [export-csv](https://github.com/highslide-software/export-csv/tree/master) module for CSV and XLS support, under MIT Licence.
 
 The only dependencies you must use are HighCharts and HighCharts exporting module. If you want PNG/JPEG, add `canvas-tools`. If you want PDF support, add both `canvas-tools` and `jsPDF`. If a dependency is missing for a file type, the option will not be available in the export menu.
 
-<sup>1</sup>: There are issues with canvg, title/subtitle appearing twice, this kind of things which `canvas-tools` fixes. So I'd suggest to go with this one.
+<sup>1</sup> There are issues with canvg, title/subtitle appearing twice, this kind of things which `canvas-tools` fixes. So I'd suggest to go with this one.
 
 ## Remarks, Issues, Other stuff
 

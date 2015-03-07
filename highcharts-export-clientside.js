@@ -1,18 +1,30 @@
 (function(H) {
   H.export = function() {};
 
+
+  // This will be redefined later;
+  var oldExport = H.Chart.prototype.exportChart;
+  H.Chart.prototype.exportChart = function() {};
+
+  // Set the URL of the export server to a non-existant one, just to be sure.
+  H.getOptions().exporting.url = "http://127.0.0.1:666/";
+
   var MIME_TYPES = {
     "PDF": "application/pdf",
     "PNG": "image/png",
     "JPEG": "image/jpeg",
-    "SVG": "image/svg+xml"
+    "SVG": "image/svg+xml",
+    "CSV": "text/csv",
+    "XLS": "application/vnd.ms-excel"
   };
 
   var MIME_TYPE_TO_EXTENSION = {
     "application/pdf": ".pdf",
     "image/png": ".png",
     "image/jpeg": ".jpeg",
-    "image/svg+xml": ".svg"
+    "image/svg+xml": ".svg",
+    "text/csv": ".csv",
+    "application/vnd.ms-excel": ".xls"
   };
 
   var TRANSLATION_KEY_TO_MIME_TYPES = {
@@ -21,6 +33,8 @@
     "downloadJPEG": "image/jpeg",
     "downloadSVG": "image/svg+xml"
   };
+  TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadCSV || 'Download CSV'] = "text/csv";
+  TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadXLS || 'Download XLS'] = "application/vnd.ms-excel";
 
   // This var indicates if the browser supports HTML5 download feature
   var browserSupportDownload = false;
@@ -28,6 +42,8 @@
   if (typeof a.download != "undefined") {
     browserSupportDownload = true;
   }
+  // This is for IE support of Blob
+  var browserSupportBlob = window.Blob && window.navigator.msSaveOrOpenBlob;
 
   /**
    * Describes the MIME types that this module supports.
@@ -36,21 +52,14 @@
    */
   H.export.MIME_TYPES = MIME_TYPES;
 
-  /**
-   * Checks if the supplied MIME type is available on the
-   * current platform for a chart to be exported in.
-   * @param mimeType {String} The MIME type.
-   * @returns {boolean} <code>true</code> if the MIME type is available on the
-   *    current platform.
-   */
-  H.export.supports = function(mimeType) {
-    if(H.Chart.prototype.getSVG === undefined) {
-      return false;
-    }
+  var supportStatus = {};
+  var buildSupportStatus = function() {
+    supportStatus[MIME_TYPES.CSV] = (H.Chart.prototype.getCSV !== undefined);
+    supportStatus[MIME_TYPES.XLS] = (H.Chart.prototype.getTable !== undefined);
 
-    if(mimeType == MIME_TYPES.SVG) {
-      return window.btoa !== undefined;
-    }
+    var svgSupport = (H.Chart.prototype.getSVG !== undefined);
+
+    supportStatus[MIME_TYPES.SVG] = svgSupport && (window.btoa !== undefined);
 
     // Canvg uses a function named RGBColor, but it's also a not widely known standard object
     // http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113/css.html#CSS-RGBColor
@@ -63,19 +72,65 @@
     // We also check that a canvas element can be created.
     var canvas = document.createElement('canvas');
     var canvgSupport = typeof canvg !== "undefined" && typeof RGBColor != "undefined" &&
-      rbgColorSupport && canvas.getContext && canvas.getContext('2d')
+    rbgColorSupport && canvas.getContext && canvas.getContext('2d');
 
-    if(mimeType == MIME_TYPES.PNG || mimeType == MIME_TYPES.JPEG) {
-      return canvgSupport;
-    }
-    else if(mimeType == MIME_TYPES.PDF) {
-      var canvas = document.createElement('canvas');
-      return canvgSupport && typeof jsPDF !== "undefined";
+    supportStatus[MIME_TYPES.PNG] = svgSupport && canvgSupport;
+    supportStatus[MIME_TYPES.JPEG] = svgSupport && canvgSupport;
+
+    supportStatus[MIME_TYPES.PDF] = svgSupport && canvgSupport && (typeof jsPDF !== "undefined");
+
+  };
+  buildSupportStatus();
+
+  /**
+   * Checks if the supplied MIME type is available on the
+   * current platform for a chart to be exported in.
+   * @param mimeType {String} The MIME type.
+   * @returns {boolean} <code>true</code> if the MIME type is available on the
+   *    current platform.
+   */
+  H.export.supports = function(mimeType) {
+    if(supportStatus[mimeType]) {
+      return supportStatus[mimeType];
     }
     else {
       return false;
     }
   };
+
+
+  // Remove unsupported download features from the menu
+  var menuItems = H.getOptions().exporting.buttons.contextButton.menuItems,
+      menuItem,
+      textKey,
+      text,
+      mimeType,
+      handlerBuilder = function(mimeType) {
+        return function() {
+          this.exportChartLocal({
+            type: mimeType,
+            csv: {
+              itemDelimiter: ';'
+            }
+          });
+        }
+      };
+  for(var i in menuItems) {
+    menuItem = menuItems[i];
+    textKey = menuItems[i].textKey;
+    text = menuItems[i].text; // export-csv do not use a textKey attribute
+    mimeType = TRANSLATION_KEY_TO_MIME_TYPES[textKey] || TRANSLATION_KEY_TO_MIME_TYPES[text];
+    if(mimeType) {
+      if(!H.export.supports(mimeType)) {
+        // Setting enabled = false isn't enough.
+        delete menuItems[i];
+      }
+      else {
+        // Redefines click handler to use our method.
+        menuItems[i].onclick = handlerBuilder(mimeType);
+      }
+    }
+  }
 
   /*
    * Converts a SVG string to a canvas element
@@ -125,16 +180,18 @@
   var defaultExportOptions = {
     type: MIME_TYPES.PNG,
     scale: 2,
-    filename: "chart"
+    filename: "chart",
+    csv: {
+      useLocalDecimalPoint: true
+    }
   };
 
-  var oldExport = H.Chart.prototype.exportChart;
   /**
    * Redefines the export function of the official exporting module.
    * @param options {Object} Overload the export options defined in the chart.
    * @param chartOptions {Object} Additionnal chart options.
    */
-  H.Chart.prototype.exportChart = function(options, chartOptions) {
+  H.Chart.prototype.exportChartLocal = function(options, chartOptions) {
     var opt = new Opt(options, this.options.exporting, defaultExportOptions);
 
     var type = opt.get("type");
@@ -144,40 +201,136 @@
 
     var filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
 
-    var scale = opt.get("scale"),
+    var data = false;
+
+    if (type == MIME_TYPES.CSV) {
+      // Copies some values from the options, so we can set it and change those
+      // through the options argument.
+      var hasCSVOptions = this.options.exporting && this.options.exporting.csv;
+      var csvOpt = new Opt((options || {}).csv, (this.options.exporting || {}).csv, defaultExportOptions.csv);
+
+      var oldOptions = {},
+      optionsToCopy = ["dateFormat", "itemDelimiter", "lineDelimiter"],
+      optionToCopy;
+      for (var i in optionsToCopy) {
+        optionToCopy = optionsToCopy[i];
+        if (csvOpt.get(optionToCopy)) {
+          if (!this.options.exporting) {
+            this.options.exporting = {};
+          }
+          if (!this.options.exporting.csv) {
+            this.options.exporting.csv = {};
+          }
+
+          oldOptions[optionToCopy] = this.options.exporting.csv[optionToCopy];
+          this.options.exporting.csv[optionToCopy] = csvOpt.get(optionToCopy);
+        }
+      }
+
+      var useLocalDecimalPoint = csvOpt.get("useLocalDecimalPoint");
+
+      var csv = this.getCSV(useLocalDecimalPoint);
+      data = 'data:' + MIME_TYPES.CSV + ',' + csv.replace(/\n/g, '%0A');
+
+      if (hasCSVOptions) {
+        for (var i in optionsToCopy) {
+          optionToCopy = optionsToCopy[i];
+          if (csvOpt.get(optionToCopy)) {
+            this.options.exporting.csv[optionToCopy] = oldOptions[optionToCopy];
+          }
+        }
+      }
+      else {
+        delete this.options.exporting.csv;
+      }
+    }
+    else if (type == MIME_TYPES.XLS) {
+      // Same as above
+      var hasCSVOptions = this.options.exporting && this.options.exporting.csv;
+      var csvOpt = new Opt((options || {}).csv, (this.options.exporting || {}).csv, defaultExportOptions.csv);
+
+      var oldOptions = {},
+          optionsToCopy = ["dateFormat"],
+          optionToCopy;
+      for (var i in optionsToCopy) {
+        optionToCopy = optionsToCopy[i];
+        if (csvOpt.get(optionToCopy)) {
+          if (!this.options.exporting) {
+            this.options.exporting = {};
+          }
+          if (!this.options.exporting.csv) {
+            this.options.exporting.csv = {};
+          }
+
+          oldOptions[optionToCopy] = this.options.exporting.csv[optionToCopy];
+          this.options.exporting.csv[optionToCopy] = csvOpt.get(optionToCopy);
+        }
+      }
+
+      var useLocalDecimalPoint = csvOpt.get("useLocalDecimalPoint");
+
+      var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+        '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
+        '<x:Name>Ark1</x:Name>' +
+        '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
+        '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
+        '<meta name=ProgId content=Excel.Sheet>' +
+        '</head><body>' +
+        this.getTable(useLocalDecimalPoint) +
+        '</body></html>';
+        data = 'data:' + MIME_TYPES.XLS + ';base64,' + window.btoa(decodeURIComponent(encodeURIComponent(xls)));
+
+      if (hasCSVOptions) {
+        for (var i in optionsToCopy) {
+          optionToCopy = optionsToCopy[i];
+          if (csvOpt.get(optionToCopy)) {
+            this.options.exporting.csv[optionToCopy] = oldOptions[optionToCopy];
+          }
+        }
+      }
+      else {
+        delete this.options.exporting.csv;
+      }
+    }
+    // Image processing
+    else {
+      var scale = opt.get("scale"),
       sourceWidth = this.options.width || opt.get("sourceWidth") || this.chartWidth,
       sourceHeight = this.options.height || opt.get("sourceHeight") || this.chartHeight,
       destWidth = sourceWidth * scale,
       destHeight = sourceHeight * scale;
 
-    var data = false;
+      var cChartOptions = chartOptions || this.options.exporting && this.options.exporting.chartOptions || {};
+      if (!cChartOptions.chart) {
+        cChartOptions.chart = { width: destWidth, height: destHeight };
+      }
+      else {
+        cChartOptions.chart.width = destWidth;
+        cChartOptions.chart.height = destHeight;
+      }
 
-    var cChartOptions = chartOptions || this.options.exporting && this.options.exporting.chartOptions || {};
-    if(!cChartOptions.chart) {
-      cChartOptions.chart = { width: destWidth, height: destHeight };
+      var svg = this.getSVG(cChartOptions);
+
+      if (type == MIME_TYPES.SVG) {
+        data = "data:" + MIME_TYPES.SVG + ";base64," + window.btoa(svg);
+      }
+      else if (type == MIME_TYPES.PNG || type == MIME_TYPES.JPEG) {
+        var canvas = svgToCanvas(svg, destWidth, destHeight);
+        data = canvas.toDataURL(type);
+      }
+      else if(type == MIME_TYPES.PDF) {
+        var canvas = svgToCanvas(svg, destWidth, destHeight);
+        var imageData = canvas.toDataURL(MIME_TYPES.JPEG);
+
+        var doc = new jsPDF('l', 'mm', [destWidth, destHeight]);;
+        doc.addImage(imageData, 'JPEG', 0, 0, destWidth, destHeight);
+
+        data = doc.output('datauristring');
+      }
     }
-    else {
-      cChartOptions.chart.width = destWidth;
-      cChartOptions.chart.height = destHeight;
-    }
 
-    var svg = this.getSVG(cChartOptions);
-
-    if (type == MIME_TYPES.SVG) {
-      data = "data:" + MIME_TYPES.SVG + "," + svg;
-    }
-    else if (type == MIME_TYPES.PNG || type == MIME_TYPES.JPEG) {
-      var canvas = svgToCanvas(svg, destWidth, destHeight);
-      data = canvas.toDataURL(type);
-    }
-    else if(type == MIME_TYPES.PDF) {
-      var canvas = svgToCanvas(svg, destWidth, destHeight);
-      var imageData = canvas.toDataURL(MIME_TYPES.JPEG);
-
-      var doc = new jsPDF('l', 'mm', [destWidth, destHeight]);;
-      doc.addImage(imageData, 'JPEG', 0, 0, destWidth, destHeight);
-
-      data = doc.output('datauristring');
+    if (!data) {
+      throw new Error("Something went wrong while exporting the chart");
     }
 
     if (browserSupportDownload) {
@@ -188,27 +341,16 @@
       a.click();
       a.remove();
     }
+    else if (browserSupportBlob) {
+      blobObject = new Blob([data]);
+      window.navigator.msSaveOrOpenBlob(blobObject, filename);
+    }
     else {
       window.open(data);
     }
   }
 
-  // Set the URL of the export server to a non-existant one, just to be sure.
-  H.getOptions().exporting.url = "http://127.0.0.1:666/"
-
-  // Remove unsupported download features
-  var menuItems = H.getOptions().exporting.buttons.contextButton.menuItems,
-      menuItem,
-      textKey;
-  for(var i in menuItems) {
-    menuItem = menuItems[i];
-    textKey = menuItems[i].textKey;
-    if(TRANSLATION_KEY_TO_MIME_TYPES[textKey]) {
-      if(!H.export.supports(TRANSLATION_KEY_TO_MIME_TYPES[textKey])) {
-        // Setting enabled = false isn't enough.
-        delete menuItems[i];
-      }
-    }
-  }
+  // Forces method from export module to use the local version
+  H.Chart.prototype.exportChart = H.Chart.prototype.exportChartLocal;
 
 }(Highcharts));
