@@ -320,10 +320,9 @@
       }
       else if(type == MIME_TYPES.PDF) {
         var canvas = svgToCanvas(svg, destWidth, destHeight);
-        var imageData = canvas.toDataURL(MIME_TYPES.JPEG);
 
         var doc = new jsPDF('l', 'mm', [destWidth, destHeight]);;
-        doc.addImage(imageData, 'JPEG', 0, 0, destWidth, destHeight);
+        doc.addImage(canvas, 'JPEG', 0, 0, destWidth, destHeight);
 
         data = doc.output('datauristring');
       }
