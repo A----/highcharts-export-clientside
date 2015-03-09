@@ -1,0 +1,13 @@
+{
+  "name": "export-csv",
+  "homepage": "https://github.com/highslide-software/export-csv",
+  "_release": "76950c81a7",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "76950c81a701cc77c3e3760d792d10a3773abc36"
+  },
+  "_source": "https://github.com/highslide-software/export-csv.git",
+  "_target": "*",
+  "_originalSource": "https://github.com/highslide-software/export-csv.git"
+}

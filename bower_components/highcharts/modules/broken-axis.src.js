@@ -1,5 +1,5 @@
 /**
- * Highcharts JS v4.1.1 (2015-02-17)
+ * Highcharts JS v4.1.3 (2015-02-27)
  * Highcharts Broken Axis module
  * 
  * Author: Stephane Vanraes, Torstein Honsi
@@ -89,7 +89,6 @@
 	});
 	
 	wrap(Axis.prototype, 'init', function (proceed, chart, userOptions) {
-
 		// Force Axis to be not-ordinal when breaks are defined
 		if (userOptions.breaks && userOptions.breaks.length) {
 			userOptions.ordinal = false;
@@ -101,7 +100,7 @@
 
 			var axis = this;
 			
-			axis.postTranslate = true;
+			axis.doPostTranslate = true;
 
 			this.val2lin = function (val) {
 				var nval = val,
@@ -140,6 +139,17 @@
 				}
 
 				return nval;
+			};
+
+			this.setExtremes = function (newMin, newMax, redraw, animation, eventArguments) {
+				// If trying to set extremes inside a break, extend it to before and after the break ( #3857 )
+				while (this.isInAnyBreak(newMin)) {
+					newMin -= this.closestPointRange;
+				}				
+				while (this.isInAnyBreak(newMax)) {
+					newMax -= this.closestPointRange;
+				}
+				Axis.prototype.setExtremes.call(this, newMin, newMax, redraw, animation, eventArguments);
 			};
 
 			this.setAxisTranslation = function (saveOld) {
@@ -255,6 +265,7 @@
 
 				if (xAxis.isInAnyBreak(point.x, true) || yAxis.isInAnyBreak(point.y, true)) {
 					points.splice(i, 1);
+					this.data[i].destroyElements(); // removes the graphics for this point if they exist
 				}
 			}
 		}

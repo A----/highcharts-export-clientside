@@ -1,0 +1,25 @@
+{
+  "name": "highcharts-export-clientside-ghpages",
+  "version": "0.9.0",
+  "homepage": "https://github.com/A----/highcharts-export-clientside",
+  "authors": [
+    "A---- <A----@users.noreply.github.com>"
+  ],
+  "moduleType": [
+    "node"
+  ],
+  "license": "Public Domain",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "highcharts-export-clientside": "https://github.com/A----/highcharts-export-clientside.git",
+    "bootstrap": "~3.3.2",
+    "octicons": "~2.2.0"
+  }
+}
