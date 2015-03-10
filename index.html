@@ -7,6 +7,7 @@
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
   <link rel="stylesheet" type="text/css" href="bower_components/octicons/octicons/octicons.css">
+  <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 <body>
 
@@ -33,7 +34,7 @@
     <p>
       <a href="http://www.highcharts.com/">HighCharts</a> has a
       <a href="http://www.highcharts.com/docs/export-module/export-module-overview">module</a> to export generated charts to a
-      file but it relies on an external server for rasterization and file download. This module, while still that one, uses HTML5
+      file but it relies on an external server for rasterization and file download. This module, while using that one, uses HTML5
       features and other JavaScript libraries to make it work without setting up an export server.
     </p>
   </div>
@@ -42,7 +43,27 @@
 <div class="container">
   <div class="panel panel-primary">
     <div class="panel-heading">Example</div>
-    <div class="panel-body highcharts-container" id="example-1">
+    <div class="panel-body row">
+      <div class="highcharts-container col-xs-8 col-sm-8 col-md-9" id="example-1"></div>
+      <div class="col-xs-4 col-sm-4 col-md-3">
+        <p>
+          Use the default <a href="http://api.highcharts.com/highcharts#exporting.buttons.contextButton.menuItems">menu</a>
+          <span class="glyphicon glyphicon-menu-hamburger glyphicon-with-border"></span> provided by HighCharts.
+        </p>
+
+        <p>Or the programmatically defined buttons below:</p>
+
+        <div class="text-center">
+          <div class="btn-group-vertical chart-export" data-chart-selector="#example-1">
+            <button type="button" class="btn btn-default" data-type="image/svg+xml">SVG</button>
+            <button type="button" class="btn btn-default" data-type="image/png">PNG</button>
+            <button type="button" class="btn btn-default" data-type="image/jpeg">JPEG</button>
+            <button type="button" class="btn btn-default" data-type="application/pdf">PDF</button>
+            <button type="button" class="btn btn-default" data-type="text/csv">CSV</button>
+            <button type="button" class="btn btn-default" data-type="application/vnd.ms-excel">XLS</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -60,40 +81,31 @@
     It also supports pseudo-official <a href="https://github.com/highslide-software/export-csv">export-csv</a> to export raw data in CSV
     and XLS. All under a unified API. Check the dependency tree below for more information.
   </p>
-</div>
 
-<hr />
+  <br />
 
-<div class="container">
   <div class="row">
-    <div class="col-xs-12 col-sm-6 col-md-8">
+    <div class="col-xs-12 col-sm-8">
       <div class="panel panel-default">
         <div class="panel-heading">Dependency tree</div>
-        <div class="panel-body">
-          To Do.
+        <div class="panel-body highcharts-container" id="dependency-tree">
         </div>
       </div>
     </div>
 
-    <div class="col-xs-12 col-sm-6 col-md-4">
+    <div class="col-xs-12 col-sm-4">
       <h4>Support</h4>
 
       <p>Here's a list of the current format this browser supports:</p>
 
-      <dl class="browser-support dl-horizontal">
-        <dt>SVG</dt>
-        <dd data-type="image/svg+xml"></dd>
-        <dt>PNG</dt>
-        <dd data-type="image/png"></dd>
-        <dt>JPEG</dt>
-        <dd data-type="image/jpeg"></dd>
-        <dt>PDF</dt>
-        <dd data-type="application/pdf"></dd>
-        <dt>CSV</dt>
-        <dd data-type="text/csv"></dd>
-        <dt>XLS</dt>
-        <dd data-type="application/vnd.ms-excel"></dd>
-      </dl>
+      <ul class="browser-support list-unstyled">
+        <li><strong>SVG</strong> <span data-type="image/svg+xml"></span></li>
+        <li><strong>PNG</strong> <span data-type="image/png"></span></li>
+        <li><strong>JPEG</strong> <span data-type="image/jpeg"></span></li>
+        <li><strong>PDF</strong> <span data-type="application/pdf"></span></li>
+        <li><strong>CSV</strong> <span data-type="text/csv"></span></li>
+        <li><strong>XLS</strong> <span data-type="application/vnd.ms-excel"></span></li>
+      </ul>
     </div>
   </div>
 
@@ -102,7 +114,48 @@
 <hr />
 
 <div class="container">
+  <h2>Installation</h2>
 
+  <p>To install it, you need to do the following:</p>
+
+  <ol>
+    <li>
+      Download it:
+      <ul>
+        <li>
+          using <a href="http://bower.io">Bower</a>:
+          <code>bower install https://github.com/A----/highcharts-export-clientside.git</code>
+        </li>
+        <li>
+          from <a href="https://github.com">GitHub</a>:
+          <a href="https://github.com/A----/highcharts-export-clientside">https://github.com/A----/highcharts-export-clientside</a>
+        </li>
+      </ul>
+    </li>
+    <li>
+      Add it to your project:
+      <code>
+        &lt;script type="application/javascript" src="./lib/highcharts-export-clientside/highcharts-export-clientside.js"&gt;&lt;/script&gt;
+      </code>
+      along-side the dependencies you need (see dependency tree above for more information).<br />
+      <br/>
+      Something along those lines:
+      <pre>
+&lt;!-- HighCharts --&gt;
+&lt;script type="application/javascript" src="./lib/highcharts/highcharts.js"&gt;&lt;/script&gt;
+
+&lt;!-- Other dependencies --&gt;
+&lt;script type="application/javascript" src="./lib/highcharts/modules/exporting.js"&gt;&lt;/script&gt;
+&lt;script type="application/javascript" src="./lib/highcharts/modules/canvas-tools.js"&gt;&lt;/script&gt;
+&lt;script type="application/javascript" src="./lib/export-csv/export-csv.js"&gt;&lt;/script&gt;
+&lt;script type="application/javascript" src="./lib/jspdf/dist/jspdf.min.js"&gt;&lt;/script&gt;
+
+&lt;!-- This module, after the dependencies -->
+&lt;script type="application/javascript" src="./lib/highcharts-export-clientside/highcharts-export-clientside.js">&lt;/script>
+      </pre>
+    </li>
+    <li>There are no step 3!</li>
+  </ol>
 </div>
 
 <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -114,7 +167,29 @@
 
 <script type="application/javascript" src="bower_components/highcharts-export-clientside/highcharts-export-clientside.js"></script>
 
+<script type="application/javascript" src="js/example1.js"></script>
+<script type="application/javascript" src="js/dependency-tree.js"></script>
+
 <script type="application/javascript">
+$(".chart-export").each(function() {
+  var jThis = $(this),
+      chartSelector = jThis.data("chartSelector"),
+      chart = $(chartSelector).highcharts();
+
+  $("*[data-type]", this).each(function() {
+    var jThis = $(this),
+        type = jThis.data("type");
+    if(Highcharts.export.supports(type)) {
+      jThis.click(function() {
+        chart.exportChartLocal({ type: type });
+      });
+    }
+    else {
+      jThis.attr("disabled", "disabled");
+    }
+  });
+});
+
 $(".browser-support *[data-type]").each(function() {
   var jThis = $(this);
   if(Highcharts.export.supports(jThis.data("type"))) {
@@ -129,53 +204,7 @@ $(".browser-support *[data-type]").each(function() {
 </script>
 
 <script type="application/javascript">
-$('#example-1').highcharts({
-  title: {
-    text: 'Monthly Average Temperature',
-    x: -20 //center
-  },
-  subtitle: {
-    text: 'Source: WorldClimate.com',
-    x: -20
-  },
-  xAxis: {
-    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-    ]
-  },
-  yAxis: {
-    title: {
-      text: 'Temperature (°C)'
-    },
-    plotLines: [{
-      value: 0,
-      width: 1,
-      color: '#808080'
-    }]
-  },
-  tooltip: {
-    valueSuffix: '°C'
-  },
-  legend: {
-    layout: 'vertical',
-    align: 'right',
-    verticalAlign: 'middle',
-    borderWidth: 0
-  },
-  series: [{
-    name: 'Tokyo',
-    data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-  }, {
-    name: 'New York',
-    data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5]
-  }, {
-    name: 'Berlin',
-    data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-  }, {
-    name: 'London',
-    data: [3.9, 4.2, 5.7, 8.5, 11.9, 15.2, 17.0, 16.6, 14.2, 10.3, 6.6, 4.8]
-  }]
-});
+
 </script>
 
 </body>
