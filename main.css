@@ -7,10 +7,9 @@ body {
   border-right: 1px solid #eee;
 }
 
-.glyphicon-with-border {
-  border: 1px solid #7e7e7e;
-  border-radius: 3px;
-  padding: 2px;
+.chart-export .file-format-name {
+  width: 50px;
+  display: inline-block;
 }
 
 .browser-support {

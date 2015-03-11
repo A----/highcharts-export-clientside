@@ -6,6 +6,7 @@
 
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.min.css" />
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css" />
+  <link rel="stylesheet" type="text/css" href="bower_components/fontawesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="bower_components/octicons/octicons/octicons.css">
   <link rel="stylesheet" type="text/css" href="main.css">
 </head>
@@ -48,26 +49,41 @@
       <div class="col-xs-4 col-sm-4 col-md-3">
         <p>
           Use the default <a href="http://api.highcharts.com/highcharts#exporting.buttons.contextButton.menuItems">menu</a>
-          <span class="glyphicon glyphicon-menu-hamburger glyphicon-with-border"></span> provided by HighCharts.
+          <i class="fa fa-bars fa-border"></i> provided by HighCharts.
         </p>
 
         <p>Or the programmatically defined buttons below:</p>
 
         <div class="text-center">
           <div class="btn-group-vertical chart-export" data-chart-selector="#example-1">
-            <button type="button" class="btn btn-default" data-type="image/svg+xml">SVG</button>
-            <button type="button" class="btn btn-default" data-type="image/png">PNG</button>
-            <button type="button" class="btn btn-default" data-type="image/jpeg">JPEG</button>
-            <button type="button" class="btn btn-default" data-type="application/pdf">PDF</button>
-            <button type="button" class="btn btn-default" data-type="text/csv">CSV</button>
-            <button type="button" class="btn btn-default" data-type="application/vnd.ms-excel">XLS</button>
+            <button type="button" class="btn btn-default" data-type="image/svg+xml">
+              <i class="fa fa-file-code-o"></i> <span class="file-format-name">SVG</span>
+            </button>
+            <button type="button" class="btn btn-default" data-type="image/png">
+              <i class="fa fa-file-image-o"></i> <span class="file-format-name">PNG</span>
+            </button>
+            <button type="button" class="btn btn-default" data-type="image/jpeg">
+              <i class="fa fa-file-image-o"></i> <span class="file-format-name">JPEG</span>
+            </button>
+            <button type="button" class="btn btn-default" data-type="application/pdf">
+              <i class="fa fa-file-pdf-o"></i> <span class="file-format-name">PDF</span>
+            </button>
+            <button type="button" class="btn btn-default" data-type="text/csv">
+              <i class="fa fa-file-text-o"></i> <span class="file-format-name">CSV</span>
+            </button>
+            <button type="button" class="btn btn-default" data-type="application/vnd.ms-excel">
+              <i class="fa fa-file-excel-o"></i> <span class="file-format-name">XLS</span>
+            </button>
           </div>
         </div>
 
         <p>
           <br />
           You can toy with this example in this jsFiddle:<br />
-          <a class="btn btn-primary pull-right" href="http://jsfiddle.net/pscjzhe4/">jsFiddle</a>
+          <a class="btn btn-primary pull-right" href="http://jsfiddle.net/pscjzhe4/">
+            <i class="fa fa-jsfiddle"></i>
+            jsFiddle
+          </a>
         </p>
 
       </div>
