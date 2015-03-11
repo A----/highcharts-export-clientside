@@ -9,13 +9,13 @@
   <link rel="stylesheet" type="text/css" href="bower_components/octicons/octicons/octicons.css">
   <link rel="stylesheet" type="text/css" href="main.css">
 </head>
-<body>
+<body id="top">
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
 <div class="container">
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
-    <a class="navbar-brand" href="#">Highcharts Client-Side Export Module</a>
+    <a class="navbar-brand" href="#top">Highcharts Client-Side Export Module</a>
   </div>
 
   <ul class="nav navbar-nav navbar-right">
@@ -63,6 +63,13 @@
             <button type="button" class="btn btn-default" data-type="application/vnd.ms-excel">XLS</button>
           </div>
         </div>
+
+        <p>
+          <br />
+          You can toy with this example in this jsFiddle:<br />
+          <a class="btn btn-primary pull-right" href="http://jsfiddle.net/pscjzhe4/">jsFiddle</a>
+        </p>
+
       </div>
     </div>
   </div>
@@ -94,9 +101,26 @@
     </div>
 
     <div class="col-xs-12 col-sm-4">
-      <h4>Support</h4>
+      <h3>Dependency tree</h3>
 
-      <p>Here's a list of the current format this browser supports:</p>
+      <p>
+        The dependency tree has been generated with HighCharts, and thus, is
+        exportable!
+      </p>
+
+      <p>
+        <em>
+          Learn more on how to draw custom shapes with HighCharts renderer
+          <a href="http://www.highcharts.com/demo/renderer">here</a>.
+        </em>
+      </p>
+
+      <h3>Support</h3>
+
+      <p>
+        With this configuration (all dependencies) and on this platform, those formats
+        have been detected to be supported:
+      </p>
 
       <ul class="browser-support list-unstyled">
         <li><strong>SVG</strong> <span data-type="image/svg+xml"></span></li>
@@ -134,13 +158,13 @@
     </li>
     <li>
       Add it to your project:
-      <code>
+      <code class="language-html">
         &lt;script type="application/javascript" src="./lib/highcharts-export-clientside/highcharts-export-clientside.js"&gt;&lt;/script&gt;
       </code>
       along-side the dependencies you need (see dependency tree above for more information).<br />
       <br/>
       Something along those lines:
-      <pre>
+      <pre class="language-html">
 &lt;!-- HighCharts --&gt;
 &lt;script type="application/javascript" src="./lib/highcharts/highcharts.js"&gt;&lt;/script&gt;
 
@@ -156,6 +180,203 @@
     </li>
     <li>There are no step 3!</li>
   </ol>
+</div>
+
+<hr />
+
+<div class="container">
+  <h2>Usage</h2>
+
+  <p>
+    <strong>If you just want to use the menu provided by HighCharts,</strong> <em>you have nothing to do!</em>
+    Just include this module after the dependencies you need but before your chart definitions.
+  </p>
+
+  <p>
+    <strong>If you need to access the feature programmatically,</strong> the module adds a method
+    <code class="language-javascript">exportChartLocal(options, chartOptions)</code> to the
+    <code class="language-javascript">HighCharts.Chart</code> prototype. It attempts to mimic as closely as possible
+    <code class="language-javascript">
+      <a href="http://api.highcharts.com/highcharts#Chart.exportChart">exportChart(options, chartOptions)</a>
+    </code>
+    provided by the official exporting module.
+  </p>
+
+  <p>Quick snippet below:</p>
+
+  <pre class="language-javascript">
+$("#my-highcharts-container")
+  .highcharts()                                 // Fetches the Chart instance associated with this container.
+  .exportChartLocal({                           // All attributes are optionals (defaut type is "image/png").
+    type: Highcharts.export.MIME_TYPES.JPEG     // For your convenience, MIME_TYPES are stored in an object.
+  });</pre>
+
+  <p>
+    You may want to know if the current platform supports said export type. To do so, a function called
+    <code class="language-javascript">supports(mimeType)</code> exists.
+  </p>
+
+  <pre class="language-javascript">
+if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
+  // Excel file format is supported!
+}</pre>
+
+  <p>
+    That's all!
+    <br/>
+    <br/>
+  </p>
+
+  <div class="alert alert-info" role="alert">
+    <strong>How can I be sure it works?</strong>
+
+    <p>
+      Fair. When possible, it first, it sets in the HighCharts global configuration object a dummy URL, just in case.
+      Next, it overrides official <code class="language-javascript">exportChart([&hellip;])</code>
+      method with its own <code class="language-javascript">exportChartLocal([&hellip;])</code> so legacy code will still
+      work.
+      Finally, it changes click handlers in the menu with a custom ones. Again, just to be safe.
+    </p>
+  </div>
+</div>
+
+<hr />
+
+<div class="container">
+  <h2>Reference</h2>
+
+  <p>Hereunder, a list of defined objects and methods by this module.</p>
+
+  <div class="row">
+  <div class="col-xs-12 col-sm-12 col-md-6">
+    <h3>In <code>HighCharts.export</code>:</h3>
+
+    <dl class="reference-list">
+      <dt><code>MIME_TYPES</code></dt>
+      <dd>
+        An object containing the <a href="http://en.wikipedia.org/wiki/Internet_media_type">MIME types</a> of
+        exportable formats.
+      </dd>
+      <dd>
+        Extensive key-value pairs are as follow:
+        <ul>
+          <li><code>SVG</code>: <code>image/svg+xml</code></li>
+          <li><code>PNG</code>: <code>image/png</code></li>
+          <li><code>JPEG</code>: <code>image/jpeg</code></li>
+          <li><code>PDF</code>: <code>application/pdf</code></li>
+          <li><code>CSV</code>: <code>text/csv</code></li>
+          <li><code>XLS</code>: <code>application/vnd.ms-excel</code></li>
+        </ul>
+      </dd>
+
+      <dt><code>supports(mimeType)</code></dt>
+      <dd>
+        A function indicating if the supplied MIME type is supported on the current configuration. Supported types
+        are computed at evaluation time, meaning that if you include a dependency dynamically or after this module,
+        this will not return a correct value.
+      </dd>
+      <dd>
+        <code>mimeType</code> is expected to be a string. For available values, see <code>MIME_TYPES</code>.
+      </dd>
+      <dd>
+        Returns a boolean, <code>true</code> if the provided MIME type is supported.
+      </dd>
+    </dl>
+  </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-6">
+    <h3>In <code>HighCharts.Chart.prototype</code>:</h3>
+
+    <dl class="reference-list">
+      <dt><code>exportChartLocal(options, chartOptions)</code></dt>
+      <dd>
+        Function to download the chart. It's set to mimic
+        <code><a href="http://api.highcharts.com/highcharts#Chart.exportChart">chart.exportChart</a></code>.
+      </dd>
+      <dd>
+        <code>options</code> <i>(optional)</i>, an object containing export options. They overload those defined at chart definition.
+        Supported attributes and default values are as follow:
+
+        <pre class="language-javascript">
+{
+  filename: "chart",
+  chartOptions: {},
+  sourceWidth: &lt;chart.width&gt;,
+  sourceHeight: &lt;chart.height&gt;,
+  scale: 2,
+  csv: {
+    useLocalDecimalPoint: true,
+    dateFormat: "%Y-%m-%d %H:%M:%S",
+    itemDelimiter: ",",
+    itemDelimiter: "\n",
+  }
+}</pre>
+        <br />
+
+        Attributes should follow <a href="http://api.highcharts.com/highcharts#exporting">official ones</a>:
+        <ul>
+          <li>
+            <code>filename</code>:
+            <span class="label label-default">All Formats</span> String, defaults to <code>"chart"</code>.
+            Desired filename without the extension.
+          </li>
+          <li>
+            <code>chartOptions</code>:
+            <span class="label label-default">SVG, PNG, JPEG, PDF</span> Object, defaults to <code>undefined</code>.
+            Default chart options, see <code>chartOptions</code> parameter.
+          </li>
+          <li>
+            <code>sourceWidth</code>, <code>sourceHeight</code>:
+            <span class="label label-default">SVG, PNG, JPEG, PDF</span> Integers, default to <code>undefined</code>.
+            If not defined, takes the current width/height. Width / Height of exported <em>before</em> <code>scale</code> is applied.
+            Superseeded by <code>chart.width</code> and <code>chart.height</code> if explicitly defined.
+            The unit is pixels except for PDF where it is millimeters.
+          </li>
+          <li>
+            <code>scale</code>:
+            <span class="label label-default">SVG, PNG, JPEG, PDF</span> Integer, defaults to <code>2</code>.
+            Multiplying factor to the dimension of the exported image.
+          </li>
+          <li>
+            <code>csv.useLocalDecimalPoint</code>:
+            <span class="label label-default">CSV, XLS</span> <span class="label label-warning">Unoffical</span>
+            Boolean, defaults to <code>true</code>.
+            If <code>true</code>, exported files use the current browser decimal separator. Else uses <code>.</code> (dot).
+          </li>
+          <li>
+            <code>csv.dateFormat</code>:
+            <span class="label label-default">CSV</span> String, defaults to <code>%Y-%m-%d %H:%M:%S</code>.
+            Format for the dates. A format understood by <code>Highcharts.dateFormat([&hellip;])</code>.
+          </li>
+          <li>
+            <code>csv.itemDelimiter</code>:
+            <span class="label label-default">CSV</span> String, defaults to <code>,</code>.
+            Character used to separate fields.
+          </li>
+          <li>
+            <code>csv.lineDelimiter</code>:
+            <span class="label label-default">CSV</span> String, defaults to <code>\n</code>.
+            Character used as new line.
+          </li>
+        </ul>
+
+      </dd>
+      <dd>
+        <code>chartOptions</code> <i>(optional)</i> is an object that will be passed through <code>chart.getSVG(chartOptions)</code>.
+        It is used to overload rendering options prior to SVG generation. For instance, setting a different background,
+        changing legend position, etc.
+      </dd>
+      <dd>
+        Return value is undefined but an error might be thrown if the provided type is not supported or
+        an error occured during the export.
+      </dd>
+
+      <dt><code>exportChart(options, chartOptions)</code></dt>
+      <dd>
+        Alias to <code>exportChartLocal(options, chartOptions)</code> for legacy code use.
+      </dd>
+    </dl>
+  </div>
 </div>
 
 <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>

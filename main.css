@@ -1,3 +1,8 @@
+body {
+  /* static navbar*/
+  padding-top: 70px;
+}
+
 #example-1 {
   border-right: 1px solid #eee;
 }
@@ -15,4 +20,14 @@
 .browser-support strong {
   width: 50px;
   display: inline-block;
+}
+
+.reference-list dt {
+  margin-top: 16px;
+  margin-bottom: 6px;
+}
+
+.reference-list dd {
+  margin-bottom: 8px;
+  padding-left: 16px;
 }
