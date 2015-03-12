@@ -3,6 +3,17 @@ body {
   padding-top: 70px;
 }
 
+/* Tweaking nav-bar when in xs mode*/
+.navbar-nav {
+  float: left;
+  margin: 0;
+}
+
+.navbar-right {
+  float: right!important;
+  margin-right: -15px;
+}
+
 #example-1 {
   border-right: 1px solid #eee;
 }
