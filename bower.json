@@ -20,7 +20,6 @@
   "dependencies": {
     "highcharts-export-clientside": "https://github.com/A----/highcharts-export-clientside.git",
     "bootstrap": "~3.3.2",
-    "octicons": "~2.2.0",
     "fontawesome": "~4.3.0"
   }
 }
