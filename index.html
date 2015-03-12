@@ -19,6 +19,22 @@
     <a class="navbar-brand" href="#top">Highcharts Client-Side Export Module</a>
   </div>
 
+<div>
+  <ul class="nav navbar-nav">
+    <li></li>
+    <li class="dropdown">
+      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Jump to&hellip; <span class="caret"></span></a>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#dependencies">Dependencies</a></li>
+        <li><a href="#installation">Installation</a></li>
+        <li><a href="#usage">Usage</a></li>
+        <li><a href="#reference">Reference</a></li>
+        <li><a href="#compatibility">Compatibility</a></li>
+        <li><a href="#license">License &amp; Credits</a></li>
+      </ul>
+    </li>
+  </ul>
+
   <ul class="nav navbar-nav navbar-right">
     <li>
         <a href="https://github.com/A----/highcharts-export-clientside">
@@ -26,6 +42,7 @@
         </a>
     </li>
   </ul>
+</div>
 </div><!-- /.container-fluid -->
 </nav>
 
@@ -93,7 +110,7 @@
 
 <hr />
 
-<div class="container">
+<div class="container" id="dependencies">
   <p>
     By using a combination of official export module, canvas-tools module (or <a href="https://github.com/gabelerner/canvg">canvg</a>)
     and <a href="https://github.com/MrRio/jsPDF">jsPDF</a>, allow your users to export your charts client-side in SVG, PNG, JPEG or PDF,
@@ -153,7 +170,7 @@
 
 <hr />
 
-<div class="container">
+<div class="container" id="installation">
   <h2>Installation</h2>
 
   <p>To install it, you need to do the following:</p>
@@ -200,7 +217,7 @@
 
 <hr />
 
-<div class="container">
+<div class="container" id="usage">
   <h2>Usage</h2>
 
   <p>
@@ -259,7 +276,7 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
 
 <hr />
 
-<div class="container">
+<div class="container" id="reference">
   <h2>Reference</h2>
 
   <p>Hereunder, a list of defined objects and methods by this module.</p>
@@ -396,7 +413,7 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
 
     <div class="vertical-separator hidden-xs hidden-sm"></div>
 
-    <h3>Compatibility</h3>
+    <h3 id="compatibility">Compatibility</h3>
 
     <div class="alert alert-warning">
       <strong>Read carefully</strong> as compatibility isn't assured on every browser.
@@ -414,8 +431,8 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
 
 <hr />
 
-<div class="container">
-  <h2>Licencing &amp; Credits</h2>
+<div class="container" id="license">
+  <h2>License &amp; Credits</h2>
 
   <div class="row">
   <div class="col-xs-12 col-sm-6">
@@ -454,6 +471,15 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
 </div>
 
 <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="application/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script type="application/javascript">
+  // Small fix for Jump to… to work properly
+  // https://github.com/twbs/bootstrap/issues/1768
+  var shiftWindow = function() { scrollBy(0, -50) };
+  if (location.hash) shiftWindow();
+  window.addEventListener("hashchange", shiftWindow);
+</script>
+
 <script type="application/javascript" src="bower_components/highcharts/highcharts.js"></script>
 <script type="application/javascript" src="bower_components/highcharts/modules/exporting.js"></script>
 <script type="application/javascript" src="bower_components/highcharts/modules/canvas-tools.js"></script>
