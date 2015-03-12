@@ -22,7 +22,7 @@
   <ul class="nav navbar-nav navbar-right">
     <li>
         <a href="https://github.com/A----/highcharts-export-clientside">
-          <span class="octicon octicon-mark-github"></span> GitHub Project
+          <i class="fa fa-github fa-lg"></i> GitHub Project
         </a>
     </li>
   </ul>
@@ -247,7 +247,8 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
     <strong>How can I be sure it works?</strong>
 
     <p>
-      Fair. When possible, it first, it sets in the HighCharts global configuration object a dummy URL, just in case.
+      Fair. When possible, it first sets object a dummy URL in the HighCharts global configuration
+      (<code class="language-javascript">exporting.url</code>), just in case.
       Next, it overrides official <code class="language-javascript">exportChart([&hellip;])</code>
       method with its own <code class="language-javascript">exportChartLocal([&hellip;])</code> so legacy code will still
       work.
@@ -264,42 +265,6 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
   <p>Hereunder, a list of defined objects and methods by this module.</p>
 
   <div class="row">
-  <div class="col-xs-12 col-sm-12 col-md-6">
-    <h3>In <code>HighCharts.export</code>:</h3>
-
-    <dl class="reference-list">
-      <dt><code>MIME_TYPES</code></dt>
-      <dd>
-        An object containing the <a href="http://en.wikipedia.org/wiki/Internet_media_type">MIME types</a> of
-        exportable formats.
-      </dd>
-      <dd>
-        Extensive key-value pairs are as follow:
-        <ul>
-          <li><code>SVG</code>: <code>image/svg+xml</code></li>
-          <li><code>PNG</code>: <code>image/png</code></li>
-          <li><code>JPEG</code>: <code>image/jpeg</code></li>
-          <li><code>PDF</code>: <code>application/pdf</code></li>
-          <li><code>CSV</code>: <code>text/csv</code></li>
-          <li><code>XLS</code>: <code>application/vnd.ms-excel</code></li>
-        </ul>
-      </dd>
-
-      <dt><code>supports(mimeType)</code></dt>
-      <dd>
-        A function indicating if the supplied MIME type is supported on the current configuration. Supported types
-        are computed at evaluation time, meaning that if you include a dependency dynamically or after this module,
-        this will not return a correct value.
-      </dd>
-      <dd>
-        <code>mimeType</code> is expected to be a string. For available values, see <code>MIME_TYPES</code>.
-      </dd>
-      <dd>
-        Returns a boolean, <code>true</code> if the provided MIME type is supported.
-      </dd>
-    </dl>
-  </div>
-
   <div class="col-xs-12 col-sm-12 col-md-6">
     <h3>In <code>HighCharts.Chart.prototype</code>:</h3>
 
@@ -393,6 +358,99 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
       </dd>
     </dl>
   </div>
+
+  <div class="col-xs-12 col-sm-12 col-md-6">
+    <h3>In <code>HighCharts.export</code>:</h3>
+
+    <dl class="reference-list">
+      <dt><code>MIME_TYPES</code></dt>
+      <dd>
+        An object containing the <a href="http://en.wikipedia.org/wiki/Internet_media_type">MIME types</a> of
+        exportable formats.
+      </dd>
+      <dd>
+        Extensive key-value pairs are as follow:
+        <ul>
+          <li><code>SVG</code>: <code>image/svg+xml</code></li>
+          <li><code>PNG</code>: <code>image/png</code></li>
+          <li><code>JPEG</code>: <code>image/jpeg</code></li>
+          <li><code>PDF</code>: <code>application/pdf</code></li>
+          <li><code>CSV</code>: <code>text/csv</code></li>
+          <li><code>XLS</code>: <code>application/vnd.ms-excel</code></li>
+        </ul>
+      </dd>
+
+      <dt><code>supports(mimeType)</code></dt>
+      <dd>
+        A function indicating if the supplied MIME type is supported on the current configuration. Supported types
+        are computed at evaluation time, meaning that if you include a dependency dynamically or after this module,
+        this will not return a correct value.
+      </dd>
+      <dd>
+        <code>mimeType</code> is expected to be a string. For available values, see <code>MIME_TYPES</code>.
+      </dd>
+      <dd>
+        Returns a boolean, <code>true</code> if the provided MIME type is supported.
+      </dd>
+    </dl>
+
+    <div class="vertical-separator hidden-xs hidden-sm"></div>
+
+    <h3>Compatibility</h3>
+
+    <div class="alert alert-warning">
+      <strong>Read carefully</strong> as compatibility isn't assured on every browser.
+    </div>
+
+    <p>
+      This module has been tested under <strong>Google Chrome</strong>, <strong>Opera</strong> (webkit-based)
+      and <strong>Mozilla Firefox.</strong>
+    </p>
+
+    <p><strong>Internet Explorer 10-11</strong> is still a work in progress.</p>
+  </div>
+  </div>
+</div>
+
+<hr />
+
+<div class="container">
+  <h2>Licencing &amp; Credits</h2>
+
+  <div class="row">
+  <div class="col-xs-12 col-sm-6">
+    <p class="clearfix">
+      <span class="pull-left fa-stack fa-lg">
+        <i class="fa fa-copyright fa-stack-2x"></i>
+        <i class="fa fa-ban fa-stack-2x"></i>
+      </span>
+      This module is releasing under the Unlicense license. A copy of which can be found <a href="http://unlicense.org">here.</a>
+    </p>
+  </div>
+  <div class="col-xs-12 col-sm-6">
+    <p>Written with the help of the following resources:</p>
+
+    <ul>
+      <li>
+        that
+        <a href="http://stackoverflow.com/questions/25630811/export-highcharts-to-pdf-using-javascript-and-local-server-no-internet-connec">
+        Stack Overflow Q/A</a> and this <a href="https://github.com/leighquince/HighChartLocalExport/">snippet/project</a> by
+        @<a href="https://github.com/leighquince">leighquince</a>;
+      </li>
+      <li>
+        this
+        <a href="http://jsfiddle.net/gh/get/jquery/1.7.2/highslide-software/highcharts.com/tree/master/samples/highcharts/exporting/offline-download/">
+        JSFiddle</a> from the official <a href="http://www.highcharts.com/docs/export-module/export-module-overview">HighCharts
+        documentation</a>.
+      </li>
+    </ul>
+  </div>
+  </div>
+</div>
+
+<div class="footer">
+<div class="container">
+</div>
 </div>
 
 <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
