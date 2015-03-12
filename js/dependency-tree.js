@@ -6,7 +6,9 @@ $('#dependency-tree').highcharts({
   },
   exporting: {
     filename: "dependency-tree",
-    scale: 1
+    scale: 1,
+    sourceWidth: 600,
+    sourceHeight: 400
   },
   chart: {
     events: {
@@ -14,6 +16,7 @@ $('#dependency-tree').highcharts({
         this.redraw();
       },
       redraw: function() {
+
         var renderer = this.renderer,
             colors = {
               fill: {
@@ -40,14 +43,27 @@ $('#dependency-tree').highcharts({
               y: this.plotTop,
               w: this.plotWidth,
               h: this.plotHeight
-            };
-
+            },
+            currentGroup;
+console.log(group && (group.renderer === this.renderer))
         // Now that's ugly as we reinstantiate all objects
         // each time its redrawn but it's also the easiest way.
+        // Plus, a print is done in a different renderer, so we can't
+        // use the same group to draw and export/print
         if(group) {
-          group.destroy();
+          if(group.renderer === this.renderer) {
+            group.destroy();
+            group = renderer.g().add();
+            currentGroup = group;
+          }
+          else {
+            currentGroup = renderer.g().add();
+          }
         }
-        group = renderer.g().add();
+        else {
+          group = renderer.g().add();
+          currentGroup = group;
+        }
 
         var drawRectangle = function(type, label, x, y) {
           var fillColor = colors.fill[type],
@@ -66,7 +82,7 @@ $('#dependency-tree').highcharts({
             .css({
               color: textColor
             })
-            .add(group)
+            .add(currentGroup)
             .shadow(true);
         };
 
@@ -77,7 +93,7 @@ $('#dependency-tree').highcharts({
               'stroke-width': 2,
               stroke: "black"
             })
-            .add(group);
+            .add(currentGroup);
         };
 
         drawLine(0.6, 0.02, 0.2, 0.15); // highcharts - highcharts-export-clientside
