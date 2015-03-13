@@ -34,19 +34,19 @@
 
   <div class="highcharts-container" id="example-1"></div>
 
-  <script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script type="application/javascript" src="bower_components/highcharts/highcharts.js"></script>
-  <script type="application/javascript" src="bower_components/highcharts/modules/exporting.js"></script>
-  <script type="application/javascript" src="bower_components/highcharts/modules/canvas-tools.js"></script>
-  <script type="application/javascript" src="bower_components/export-csv/export-csv.js"></script>
-  <script type="application/javascript" src="bower_components/jspdf/dist/jspdf.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
+  <script src="bower_components/highcharts/modules/exporting.js"></script>
+  <script src="bower_components/highcharts/modules/canvas-tools.js"></script>
+  <script src="bower_components/export-csv/export-csv.js"></script>
+  <script src="bower_components/jspdf/dist/jspdf.min.js"></script>
 
-  <script type="application/javascript" src="highcharts-export-clientside.js"></script>
+  <script src="highcharts-export-clientside.js"></script>
 
-  <script type="application/javascript">
+  <script>
   $(".browser-support *[data-type]").each(function() {
     var jThis = $(this);
-    if(Highcharts.export.supports(jThis.data("type"))) {
+    if(Highcharts.exporting.supports(jThis.data("type"))) {
       jThis.addClass("text-success");
       jThis.html('<span class="glyphicon glyphicon-ok"></span>');
     }
@@ -57,7 +57,7 @@
   });
   </script>
 
-  <script type="application/javascript">
+  <script>
   $('#example-1').highcharts({
     title: {
       text: 'Monthly Average Temperature',

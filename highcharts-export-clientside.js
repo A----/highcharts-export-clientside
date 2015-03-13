@@ -1,6 +1,7 @@
 (function(H) {
-  H.export = function() {};
-
+  if (!H.exporting) {
+    H.exporting = function() {};
+  }
 
   // This will be redefined later;
   var oldExport = H.Chart.prototype.exportChart;
@@ -50,7 +51,7 @@
    * Additionnally, you can call `support(mimeType)` to check
    * that this type is available on the current platform.
    */
-  H.export.MIME_TYPES = MIME_TYPES;
+  H.exporting.MIME_TYPES = MIME_TYPES;
 
   var supportStatus = {};
   var buildSupportStatus = function() {
@@ -89,7 +90,7 @@
    * @returns {boolean} <code>true</code> if the MIME type is available on the
    *    current platform.
    */
-  H.export.supports = function(mimeType) {
+   H.exporting.supports = function(mimeType) {
     if(supportStatus[mimeType]) {
       return supportStatus[mimeType];
     }
@@ -121,7 +122,7 @@
     text = menuItems[i].text; // export-csv do not use a textKey attribute
     mimeType = TRANSLATION_KEY_TO_MIME_TYPES[textKey] || TRANSLATION_KEY_TO_MIME_TYPES[text];
     if(mimeType) {
-      if(!H.export.supports(mimeType)) {
+      if(!H.exporting.supports(mimeType)) {
         // Setting enabled = false isn't enough.
         delete menuItems[i];
       }
@@ -195,7 +196,7 @@
     var opt = new Opt(options, this.options.exporting, defaultExportOptions);
 
     var type = opt.get("type");
-    if (!H.export.supports(type)) {
+    if (!H.exporting.supports(type)) {
       throw new Error("Unsupported export format on this platform: " + type);
     }
 
