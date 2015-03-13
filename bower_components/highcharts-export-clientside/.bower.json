@@ -37,11 +37,11 @@
     "bootstrap": "~3.3.2",
     "jquery": "^1.9.0"
   },
-  "_release": "9fb32613d9",
+  "_release": "99ab87445b",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "9fb32613d9eb9fcfdf909efcb96b251e2b33dcee"
+    "commit": "99ab87445ba983df54660243d1bfcede4cc0a4eb"
   },
   "_source": "https://github.com/A----/highcharts-export-clientside.git",
   "_target": "*",

@@ -101,7 +101,7 @@
         <p>
           <br />
           You can toy with this example in this jsFiddle:<br />
-          <a class="btn btn-primary pull-right" href="http://jsfiddle.net/pscjzhe4/">
+          <a class="btn btn-primary pull-right" href="http://jsfiddle.net/pscjzhe4/1/">
             <i class="fa fa-jsfiddle"></i>
             jsFiddle
           </a>
@@ -424,11 +424,16 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
     </div>
 
     <p>
-      This module has been tested under <strong>Google Chrome</strong>, <strong>Opera</strong> (webkit-based)
-      and <strong>Mozilla Firefox.</strong>
+      This module has been tested under <strong>Google Chrome</strong>, <strong>Opera</strong> (webkit-based),
+      <strong>Mozilla Firefox.</strong> and <strong>Internet Explorer 10-11</strong>.
     </p>
 
-    <p><strong>Internet Explorer 10-11</strong> is still a work in progress.</p>
+    <p>
+      IE10+ doesn't have JPEG support as it relies on
+      <a href="https://msdn.microsoft.com/en-us/library/windows/apps/hh465735.aspx">msToBlob</a>.
+    </p>
+
+    <p>IE 9 and below are not supported at this stage.</p>
   </div>
   </div>
 </div>
