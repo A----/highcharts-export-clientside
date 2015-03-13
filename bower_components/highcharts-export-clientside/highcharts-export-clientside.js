@@ -278,7 +278,7 @@
         '</head><body>' +
         this.getTable(useLocalDecimalPoint) +
         '</body></html>';
-        data = 'data:' + MIME_TYPES.XLS + ';base64,' + window.btoa(decodeURIComponent(encodeURIComponent(xls)));
+      data = 'data:' + MIME_TYPES.XLS + ';base64,' + window.btoa(decodeURIComponent(encodeURIComponent(xls)));
 
       if (hasCSVOptions) {
         for (var i in optionsToCopy) {

@@ -19,7 +19,9 @@
   ],
   "dependencies": {
     "highcharts-export-clientside": "https://github.com/A----/highcharts-export-clientside.git",
-    "bootstrap": "~3.3.2",
-    "fontawesome": "~4.3.0"
+    "bootstrap": "^3.3.2",
+    "fontawesome": "^4.3.0",
+    "respond": "^1.4.2",
+    "jquery": "^1.9.0"
   }
 }
