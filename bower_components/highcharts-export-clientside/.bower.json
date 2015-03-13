@@ -25,7 +25,8 @@
     "node_modules",
     "bower_components",
     "test",
-    "tests"
+    "tests",
+    "example.html"
   ],
   "dependencies": {
     "jspdf": "~1.0.272",
@@ -33,13 +34,14 @@
     "export-csv": "https://github.com/highslide-software/export-csv.git"
   },
   "devDependencies": {
-    "bootstrap": "~3.3.2"
+    "bootstrap": "~3.3.2",
+    "jquery": "^1.9.0"
   },
-  "_release": "cfec047281",
+  "_release": "9fb32613d9",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "cfec0472812b2af94f0551b47de88a2b9df95705"
+    "commit": "9fb32613d9eb9fcfdf909efcb96b251e2b33dcee"
   },
   "_source": "https://github.com/A----/highcharts-export-clientside.git",
   "_target": "*",

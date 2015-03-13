@@ -245,7 +245,7 @@
 $("#my-highcharts-container")
   .highcharts()                                 // Fetches the Chart instance associated with this container.
   .exportChartLocal({                           // All attributes are optionals (defaut type is "image/png").
-    type: Highcharts.export.MIME_TYPES.JPEG     // For your convenience, MIME_TYPES are stored in an object.
+    type: Highcharts.exporting.MIME_TYPES.JPEG     // For your convenience, MIME_TYPES are stored in an object.
   });</pre>
 
   <p>
@@ -254,7 +254,7 @@ $("#my-highcharts-container")
   </p>
 
   <pre class="language-javascript">
-if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
+if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
   // Excel file format is supported!
 }</pre>
 
@@ -381,7 +381,7 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
   </div>
 
   <div class="col-xs-12 col-sm-12 col-md-6">
-    <h3>In <code>HighCharts.export</code>:</h3>
+    <h3>In <code>HighCharts.exporting</code>:</h3>
 
     <dl class="reference-list">
       <dt><code>MIME_TYPES</code></dt>
@@ -481,7 +481,7 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
   // https://github.com/twbs/bootstrap/issues/1768
   var shiftWindow = function() { scrollBy(0, -70) };
   if (location.hash) shiftWindow();
-  window.addEventListener("hashchange", shiftWindow);
+  window.addEventListener && window.addEventListener("hashchange", shiftWindow);
 </script>
 
 <script src="bower_components/highcharts/highcharts.js"></script>
@@ -504,7 +504,7 @@ $(".chart-export").each(function() {
   $("*[data-type]", this).each(function() {
     var jThis = $(this),
         type = jThis.data("type");
-    if(Highcharts.export.supports(type)) {
+    if(Highcharts.exporting.supports(type)) {
       jThis.click(function() {
         chart.exportChartLocal({ type: type });
       });
@@ -517,7 +517,7 @@ $(".chart-export").each(function() {
 
 $(".browser-support *[data-type]").each(function() {
   var jThis = $(this);
-  if(Highcharts.export.supports(jThis.data("type"))) {
+  if(Highcharts.exporting.supports(jThis.data("type"))) {
     jThis.addClass("text-success");
     jThis.html('<span class="glyphicon glyphicon-ok"></span>');
   }
