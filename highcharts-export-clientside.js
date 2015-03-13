@@ -40,7 +40,7 @@
   // This var indicates if the browser supports HTML5 download feature
   var browserSupportDownload = false;
   var a = document.createElement('a');
-  if (typeof a.download != "undefined") {
+  if (typeof window.btoa != "undefined" && typeof a.download != "undefined") {
     browserSupportDownload = true;
   }
   // This is for IE support of Blob
@@ -55,12 +55,14 @@
 
   var supportStatus = {};
   var buildSupportStatus = function() {
-    supportStatus[MIME_TYPES.CSV] = (H.Chart.prototype.getCSV !== undefined);
-    supportStatus[MIME_TYPES.XLS] = (H.Chart.prototype.getTable !== undefined);
+    var hasDownloadOrBlob = browserSupportDownload || browserSupportBlob;
+
+    supportStatus[MIME_TYPES.CSV] = hasDownloadOrBlob && (H.Chart.prototype.getCSV !== undefined);
+    supportStatus[MIME_TYPES.XLS] = hasDownloadOrBlob && (H.Chart.prototype.getTable !== undefined);
 
     var svgSupport = (H.Chart.prototype.getSVG !== undefined);
 
-    supportStatus[MIME_TYPES.SVG] = svgSupport && (window.btoa !== undefined);
+    supportStatus[MIME_TYPES.SVG] = hasDownloadOrBlob && svgSupport && (window.btoa !== undefined);
 
     // Canvg uses a function named RGBColor, but it's also a not widely known standard object
     // http://www.w3.org/TR/2000/REC-DOM-Level-2-Style-20001113/css.html#CSS-RGBColor
@@ -75,10 +77,12 @@
     var canvgSupport = typeof canvg !== "undefined" && typeof RGBColor != "undefined" &&
     rbgColorSupport && canvas.getContext && canvas.getContext('2d');
 
-    supportStatus[MIME_TYPES.PNG] = svgSupport && canvgSupport;
-    supportStatus[MIME_TYPES.JPEG] = svgSupport && canvgSupport;
+    supportStatus[MIME_TYPES.PNG] = hasDownloadOrBlob && svgSupport && canvgSupport;
+    // On IE, it relies on canvas.msToBlob() which always returns PNG
+    supportStatus[MIME_TYPES.JPEG] = /* useless, see last param: hasDownloadOrBlob && */
+        svgSupport && canvgSupport && browserSupportDownload;
 
-    supportStatus[MIME_TYPES.PDF] = svgSupport && canvgSupport && (typeof jsPDF !== "undefined");
+    supportStatus[MIME_TYPES.PDF] = hasDownloadOrBlob && svgSupport && canvgSupport && (typeof jsPDF !== "undefined");
 
   };
   buildSupportStatus();
@@ -202,7 +206,11 @@
 
     var filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
 
-    var data = false;
+    var data = {
+        content: undefined,
+        datauri: undefined,
+        blob: undefined
+      };
 
     if (type == MIME_TYPES.CSV) {
       // Copies some values from the options, so we can set it and change those
@@ -231,7 +239,7 @@
       var useLocalDecimalPoint = csvOpt.get("useLocalDecimalPoint");
 
       var csv = this.getCSV(useLocalDecimalPoint);
-      data = 'data:' + MIME_TYPES.CSV + ',' + csv.replace(/\n/g, '%0A');
+      data.content = csv;
 
       if (hasCSVOptions) {
         for (var i in optionsToCopy) {
@@ -272,14 +280,14 @@
 
       var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
         '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
-        '<x:Name>Ark1</x:Name>' +
+        '<x:Name>Sheet</x:Name>' +
         '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
         '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
         '<meta name=ProgId content=Excel.Sheet>' +
         '</head><body>' +
         this.getTable(useLocalDecimalPoint) +
         '</body></html>';
-      data = 'data:' + MIME_TYPES.XLS + ';base64,' + window.btoa(decodeURIComponent(encodeURIComponent(xls)));
+      data.content = xls;
 
       if (hasCSVOptions) {
         for (var i in optionsToCopy) {
@@ -313,11 +321,12 @@
       var svg = this.getSVG(cChartOptions);
 
       if (type == MIME_TYPES.SVG) {
-        data = "data:" + MIME_TYPES.SVG + ";base64," + window.btoa(svg);
+        data.content = svg;
       }
       else if (type == MIME_TYPES.PNG || type == MIME_TYPES.JPEG) {
         var canvas = svgToCanvas(svg, destWidth, destHeight);
-        data = canvas.toDataURL(type);
+        data.datauri = browserSupportDownload && canvas.toDataURL && canvas.toDataURL(type);
+        data.blob = (type == MIME_TYPES.PNG) && !browserSupportDownload && canvas.msToBlob && canvas.msToBlob();
       }
       else if(type == MIME_TYPES.PDF) {
         var canvas = svgToCanvas(svg, destWidth, destHeight);
@@ -325,24 +334,25 @@
         var doc = new jsPDF('l', 'mm', [destWidth, destHeight]);;
         doc.addImage(canvas, 'JPEG', 0, 0, destWidth, destHeight);
 
-        data = doc.output('datauristring');
+        data.datauri = browserSupportDownload && doc.output('datauristring');
+        data.blob = !browserSupportDownload && doc.output('blob');
       }
     }
 
-    if (!data) {
+    if (!data.content && !(data.datauri || data.blob)) {
       throw new Error("Something went wrong while exporting the chart");
     }
 
-    if (browserSupportDownload) {
+    if (browserSupportDownload && (data.datauri || data.content)) {
       a = document.createElement('a');
-      a.href = data;
+      a.href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
       a.download = filename;
       document.body.appendChild(a);
       a.click();
       a.remove();
     }
-    else if (browserSupportBlob) {
-      blobObject = new Blob([data]);
+    else if (browserSupportBlob && (data.blob || data.content)) {
+      blobObject = data.blob || new Blob([data.content], { type: type });
       window.navigator.msSaveOrOpenBlob(blobObject, filename);
     }
     else {
