@@ -11,7 +11,7 @@
   <link rel="stylesheet" type="text/css" href="main.css">
 
   <!--[if lt IE 9]>
-  <script type="application/javascript" src="bower_components/respond/dest/respond.min.js"></script>
+  <script src="bower_components/respond/dest/respond.min.js"></script>
   <![endif]-->
 </head>
 <body id="top">
@@ -196,23 +196,23 @@
     <li>
       Add it to your project:
       <code class="language-html">
-        &lt;script type="application/javascript" src="./lib/highcharts-export-clientside/highcharts-export-clientside.js"&gt;&lt;/script&gt;
+        &lt;script src="./lib/highcharts-export-clientside/highcharts-export-clientside.js"&gt;&lt;/script&gt;
       </code>
       along-side the dependencies you need (see dependency tree above for more information).<br />
       <br/>
       Something along those lines:
       <pre class="language-html">
 &lt;!-- HighCharts --&gt;
-&lt;script type="application/javascript" src="./lib/highcharts/highcharts.js"&gt;&lt;/script&gt;
+&lt;script src="./lib/highcharts/highcharts.js"&gt;&lt;/script&gt;
 
 &lt;!-- Other dependencies --&gt;
-&lt;script type="application/javascript" src="./lib/highcharts/modules/exporting.js"&gt;&lt;/script&gt;
-&lt;script type="application/javascript" src="./lib/highcharts/modules/canvas-tools.js"&gt;&lt;/script&gt;
-&lt;script type="application/javascript" src="./lib/export-csv/export-csv.js"&gt;&lt;/script&gt;
-&lt;script type="application/javascript" src="./lib/jspdf/dist/jspdf.min.js"&gt;&lt;/script&gt;
+&lt;script src="./lib/highcharts/modules/exporting.js"&gt;&lt;/script&gt;
+&lt;script src="./lib/highcharts/modules/canvas-tools.js"&gt;&lt;/script&gt;
+&lt;script src="./lib/export-csv/export-csv.js"&gt;&lt;/script&gt;
+&lt;script src="./lib/jspdf/dist/jspdf.min.js"&gt;&lt;/script&gt;
 
 &lt;!-- This module, after the dependencies -->
-&lt;script type="application/javascript" src="./lib/highcharts-export-clientside/highcharts-export-clientside.js">&lt;/script>
+&lt;script src="./lib/highcharts-export-clientside/highcharts-export-clientside.js">&lt;/script>
       </pre>
     </li>
     <li>There are no step 3!</li>
@@ -474,9 +474,9 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
 </div>
 </div>
 
-<script type="application/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-<script type="application/javascript" src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-<script type="application/javascript">
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script>
   // Small fix for Jump to… to work properly
   // https://github.com/twbs/bootstrap/issues/1768
   var shiftWindow = function() { scrollBy(0, -70) };
@@ -484,18 +484,18 @@ if(Highcharts.export.supports(Highcharts.export.MIME_TYPES.XLS)) {
   window.addEventListener("hashchange", shiftWindow);
 </script>
 
-<script type="application/javascript" src="bower_components/highcharts/highcharts.js"></script>
-<script type="application/javascript" src="bower_components/highcharts/modules/exporting.js"></script>
-<script type="application/javascript" src="bower_components/highcharts/modules/canvas-tools.js"></script>
-<script type="application/javascript" src="bower_components/export-csv/export-csv.js"></script>
-<script type="application/javascript" src="bower_components/jspdf/dist/jspdf.min.js"></script>
+<script src="bower_components/highcharts/highcharts.js"></script>
+<script src="bower_components/highcharts/modules/exporting.js"></script>
+<script src="bower_components/highcharts/modules/canvas-tools.js"></script>
+<script src="bower_components/export-csv/export-csv.js"></script>
+<script src="bower_components/jspdf/dist/jspdf.min.js"></script>
 
-<script type="application/javascript" src="bower_components/highcharts-export-clientside/highcharts-export-clientside.js"></script>
+<script src="bower_components/highcharts-export-clientside/highcharts-export-clientside.js"></script>
 
-<script type="application/javascript" src="js/example1.js"></script>
-<script type="application/javascript" src="js/dependency-tree.js"></script>
+<script src="js/example1.js"></script>
+<script src="js/dependency-tree.js"></script>
 
-<script type="application/javascript">
+<script>
 $(".chart-export").each(function() {
   var jThis = $(this),
       chartSelector = jThis.data("chartSelector"),
@@ -526,10 +526,6 @@ $(".browser-support *[data-type]").each(function() {
     jThis.html('<span class="glyphicon glyphicon-remove"></span>');
   }
 });
-</script>
-
-<script type="application/javascript">
-
 </script>
 
 </body>
