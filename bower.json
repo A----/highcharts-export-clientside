@@ -1,12 +1,12 @@
 {
   "name": "highcharts-export-clientside",
   "main": "highcharts-export-clientside.js",
-  "version": "0.9.0",
+  "version": "1.0.0",
   "homepage": "https://github.com/A----/highcharts-export-clientside",
   "authors": [
     "A---- <A----@users.noreply.github.com>"
   ],
-  "description": "Module for Highcharts to exports charts client-side",
+  "description": "Module for Highcharts to export charts client-side",
   "moduleType": [
     "node"
   ],
@@ -18,7 +18,9 @@
     "jpg",
     "png",
     "pdf",
-    "svg"
+    "svg",
+    "csv",
+    "xls"
   ],
   "license": "Public Domain",
   "ignore": [
