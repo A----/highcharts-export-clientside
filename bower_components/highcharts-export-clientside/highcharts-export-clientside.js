@@ -174,7 +174,7 @@
    */
   Opt.prototype.get = function(key) {
     for(var i = 0; i < this.bundles.length; i++) {
-      if(this.bundles[i] && this.bundles[i][key]) {
+      if(this.bundles[i] && this.bundles[i][key] !== undefined) {
         return this.bundles[i][key];
       }
     }

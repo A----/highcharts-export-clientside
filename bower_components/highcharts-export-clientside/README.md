@@ -1,7 +1,7 @@
 # highcharts-export-clientside
 Module for [HighCharts](http://www.highcharts.com/) to exports charts client-side.
 
-> :warning: This project is not thoroughly tested. It just happens to work in my cases (charts & environments). Please submit pull requests & issues!
+Webpage for this project is here: http://a----.github.io/highcharts-export-clientside/
 
 You may need to export a chart you made using HighCharts to an image or a PDF. It has an exporting module but it relies on an export server, which by default is http://export.highcharts.com/ and you also –unlucky you– have one or more of the following:
 * your app doesn't have access to the intertubes;
