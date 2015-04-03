@@ -33,13 +33,14 @@
   "homepage": "http://a----.github.io/highcharts-export-clientside/",
   "docs": "http://a----.github.io/highcharts-export-clientside/",
   "bugs": "https://github.com/A----/highcharts-export-clientside/issues",
-  "download": "",
+  "download": "https://github.com/A----/highcharts-export-clientside/archive/1.0.0.zip",
   "demo": [
     "http://jsfiddle.net/pscjzhe4/1/"
   ],
   "maintainers": [
     {
       "name": "A----",
+      "email": "A----@users.noreply.github.com",
       "url": "https://github.com/A----/"
     }
   ]
