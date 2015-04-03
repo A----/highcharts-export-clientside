@@ -45,7 +45,7 @@ $('#dependency-tree').highcharts({
               h: this.plotHeight
             },
             currentGroup;
-console.log(group && (group.renderer === this.renderer))
+
         // Now that's ugly as we reinstantiate all objects
         // each time its redrawn but it's also the easiest way.
         // Plus, a print is done in a different renderer, so we can't
