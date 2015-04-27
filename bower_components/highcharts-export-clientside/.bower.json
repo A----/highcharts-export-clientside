@@ -1,7 +1,7 @@
 {
   "name": "highcharts-export-clientside",
   "main": "highcharts-export-clientside.js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/A----/highcharts-export-clientside",
   "authors": [
     "A---- <A----@users.noreply.github.com>"
@@ -40,11 +40,11 @@
     "bootstrap": "~3.3.2",
     "jquery": "^1.9.0"
   },
-  "_release": "1.0.0",
+  "_release": "1.0.1",
   "_resolution": {
     "type": "version",
-    "tag": "1.0.0",
-    "commit": "8bcef824bfe657a94d527213707636589517fd05"
+    "tag": "1.0.1",
+    "commit": "b0e3a2a850a5ae6e9b05fef49449dc9e3d110010"
   },
   "_source": "https://github.com/A----/highcharts-export-clientside.git",
   "_target": "*",

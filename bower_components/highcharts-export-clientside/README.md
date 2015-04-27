@@ -44,6 +44,12 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 * This probably won't work on Internet Explorer has it uses HTML5 download feature and opens a data-uri as a fallback. ~~But IE has limited data-uri support so who knows.~~ Nope, but there are some shim/sham/polyfills so that's possible to do.
 * When exporting into PDF, `sourceWidth` and `sourceHeight` are expressed in millimeters.
 
+## Changelog
+
+### v1.0.1 – 2015-04-27
+
+* handling of URL options in export-csv options (highslide-software/export-csv#40)
+
 ## Credits
 
 Written with the help of the following resources:
