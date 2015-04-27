@@ -8,7 +8,16 @@
   H.Chart.prototype.exportChart = function() {};
 
   // Set the URL of the export server to a non-existant one, just to be sure.
-  H.getOptions().exporting.url = "http://127.0.0.1:666/";
+  var defaultHighChartsOptions = H.getOptions() || {};
+  if(!defaultHighChartsOptions.exporting) {
+    defaultHighChartsOptions.exporting = {};
+  }
+  defaultHighChartsOptions.exporting.url = "http://127.0.0.1:666/";
+  if(!defaultHighChartsOptions.exporting.csv) {
+    defaultHighChartsOptions.exporting.csv = {};
+  }
+  defaultHighChartsOptions.exporting.csv.url = "http://127.0.0.1:666/";
+  H.setOptions(defaultHighChartsOptions);
 
   var MIME_TYPES = {
     "PDF": "application/pdf",
