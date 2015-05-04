@@ -154,13 +154,21 @@
    * @param height {Integer} The rasterized height.
    * @return {DOMNode} a canvas element.
    */
-  var svgToCanvas = function(svg, width, height) {
+  var svgToCanvas = function(svg, width, height, callback) {
     var canvas = document.createElement('canvas');
 
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
 
     canvas.getContext('2d').drawSvg(svg, 0, 0, width, height);
+
+    canvg(canvas, svg, {
+      offsetX: 0,
+      offsetY: 0,
+      scaleWidth: width,
+      scaleHeight: height,
+      renderCallback: function() { callback(canvas); }
+    });
 
     return canvas;
   };
@@ -200,6 +208,182 @@
     }
   };
 
+  var preRenderCsvXls = function (highChartsObject, options, chartOptions) {
+      // Copies some values from the options, so we can set it and change those
+      // through the options argument.
+      var hasCSVOptions = highChartsObject.options.exporting && highChartsObject.options.exporting.csv;
+      var csvOpt = new Opt((options || {}).csv, (highChartsObject.options.exporting || {}).csv, defaultExportOptions.csv);
+
+      var oldOptions = {},
+      optionsToCopy = ["dateFormat", "itemDelimiter", "lineDelimiter"],
+      optionToCopy;
+      for (var i in optionsToCopy) {
+        optionToCopy = optionsToCopy[i];
+        if (csvOpt.get(optionToCopy)) {
+          if (!highChartsObject.options.exporting) {
+            highChartsObject.options.exporting = {};
+          }
+          if (!highChartsObject.options.exporting.csv) {
+            highChartsObject.options.exporting.csv = {};
+          }
+
+          oldOptions[optionToCopy] = highChartsObject.options.exporting.csv[optionToCopy];
+          highChartsObject.options.exporting.csv[optionToCopy] = csvOpt.get(optionToCopy);
+        }
+      }
+
+      return {
+        hasCSVOptions: hasCSVOptions,
+        csvOpt: csvOpt,
+        useLocalDecimalPoint: csvOpt.get("useLocalDecimalPoint"),
+        optionsToCopy: optionsToCopy,
+        oldOptions: oldOptions
+      };
+    };
+
+  var renderCsv = function(highChartsObject, context, callback) {
+      var data = {
+          content: undefined,
+          datauri: undefined,
+          blob: undefined
+        };
+
+      var csv = highChartsObject.getCSV(context.useLocalDecimalPoint);
+      data.content = csv;
+
+      callback(data);
+    };
+
+  var renderXls = function(highChartsObject, context, callback) {
+      var data = {
+          content: undefined,
+          datauri: undefined,
+          blob: undefined
+        };
+
+      var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+        '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
+        '<x:Name>Sheet</x:Name>' +
+        '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
+        '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
+        '<meta name=ProgId content=Excel.Sheet>' +
+        '</head><body>' +
+        highChartsObject.getTable(context.useLocalDecimalPoint) +
+        '</body></html>';
+      data.content = xls;
+
+      callback(data);
+    };
+
+  var postRenderCsvXls = function(highChartsObject, context) {
+      if (context.hasCSVOptions) {
+        for (var i in context.optionsToCopy) {
+          optionToCopy = context.optionsToCopy[i];
+          if (context.csvOpt.get(optionToCopy)) {
+            highChartsObject.options.exporting.csv[optionToCopy] = context.oldOptions[optionToCopy];
+          }
+        }
+      }
+      else {
+        delete highChartsObject.options.exporting.csv;
+      }
+    };
+
+  var preRenderImage = function (highChartsObject, options, chartOptions) {
+    var opt = new Opt(options, highChartsObject.options.exporting, defaultExportOptions);
+
+    var scale = opt.get("scale"),
+    sourceWidth = highChartsObject.options.width || opt.get("sourceWidth") || highChartsObject.chartWidth,
+    sourceHeight = highChartsObject.options.height || opt.get("sourceHeight") || highChartsObject.chartHeight,
+    destWidth = sourceWidth * scale,
+    destHeight = sourceHeight * scale;
+
+    var cChartOptions = chartOptions || highChartsObject.options.exporting && highChartsObject.options.exporting.chartOptions || {};
+    if (!cChartOptions.chart) {
+      cChartOptions.chart = { width: destWidth, height: destHeight };
+    }
+    else {
+      cChartOptions.chart.width = destWidth;
+      cChartOptions.chart.height = destHeight;
+    }
+
+    var svg = highChartsObject.getSVG(cChartOptions);
+
+    return {
+      svg: svg,
+      destWidth: destWidth,
+      destHeight: destHeight
+    };
+  };
+
+  var renderSvg = function(highChartsObject, context, callback) {
+      var data = {
+          content: undefined,
+          datauri: undefined,
+          blob: undefined
+        };
+
+      data.content = context.svg;
+
+      callback(data);
+  };
+
+  var renderPngJpeg = function(highChartsObject, context, callback) {
+      var data = {
+          content: undefined,
+          datauri: undefined,
+          blob: undefined
+        };
+
+      svgToCanvas(context.svg, context.destWidth, context.destHeight, function(canvas) {
+        data.datauri = context.browserSupportDownload && canvas.toDataURL && canvas.toDataURL(context.type);
+        data.blob = (context.type == MIME_TYPES.PNG) && !context.browserSupportDownload && canvas.msToBlob && canvas.msToBlob();
+
+        callback(data);
+      });
+  };
+
+  var renderPdf = function(highChartsObject, context, callback) {
+      var data = {
+          content: undefined,
+          datauri: undefined,
+          blob: undefined
+        };
+
+      svgToCanvas(context.svg, context.destWidth, context.destHeight, function(canvas) {
+        var doc = new jsPDF('l', 'mm', [context.destWidth, context.destHeight]);;
+        doc.addImage(canvas, 'JPEG', 0, 0, context.destWidth, context.destHeight);
+
+        data.datauri = context.browserSupportDownload && doc.output('datauristring');
+        data.blob = !context.browserSupportDownload && doc.output('blob');
+
+        callback(data);
+      });
+  };
+
+
+  var download = function(highChartsObject, context, data) {
+    if (!data || (!data.content && !(data.datauri || data.blob))) {
+      throw new Error("Something went wrong while exporting the chart");
+    }
+
+    if (context.browserSupportDownload && (data.datauri || data.content)) {
+      a = document.createElement('a');
+      a.href = data.datauri || ('data:' + context.type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
+      a.download = context.filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+    else if (context.browserSupportBlob && (data.blob || data.content)) {
+      blobObject = data.blob || new Blob([data.content], { type: context.type });
+      window.navigator.msSaveOrOpenBlob(blobObject, context.filename);
+    }
+    else {
+      window.open(data);
+    }
+  };
+
   /**
    * Redefines the export function of the official exporting module.
    * @param options {Object} Overload the export options defined in the chart.
@@ -213,160 +397,65 @@
       throw new Error("Unsupported export format on this platform: " + type);
     }
 
-    var filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
+    var steps = {
+      rendering: {},
+      download: download
+    };
 
-    var data = {
-        content: undefined,
-        datauri: undefined,
-        blob: undefined
-      };
+    steps.rendering[MIME_TYPES.CSV] = {
+      preRender: preRenderCsvXls,
+      render: renderCsv,
+      postRender: postRenderCsvXls
+    };
 
-    if (type == MIME_TYPES.CSV) {
-      // Copies some values from the options, so we can set it and change those
-      // through the options argument.
-      var hasCSVOptions = this.options.exporting && this.options.exporting.csv;
-      var csvOpt = new Opt((options || {}).csv, (this.options.exporting || {}).csv, defaultExportOptions.csv);
+    steps.rendering[MIME_TYPES.XLS] = {
+      preRender: preRenderCsvXls,
+      render: renderXls,
+      postRender: postRenderCsvXls
+    };
 
-      var oldOptions = {},
-      optionsToCopy = ["dateFormat", "itemDelimiter", "lineDelimiter"],
-      optionToCopy;
-      for (var i in optionsToCopy) {
-        optionToCopy = optionsToCopy[i];
-        if (csvOpt.get(optionToCopy)) {
-          if (!this.options.exporting) {
-            this.options.exporting = {};
-          }
-          if (!this.options.exporting.csv) {
-            this.options.exporting.csv = {};
-          }
+    steps.rendering[MIME_TYPES.SVG] = {
+      preRender: preRenderImage,
+      render: renderSvg
+    };
 
-          oldOptions[optionToCopy] = this.options.exporting.csv[optionToCopy];
-          this.options.exporting.csv[optionToCopy] = csvOpt.get(optionToCopy);
-        }
-      }
+    steps.rendering[MIME_TYPES.PNG] = {
+      preRender: preRenderImage,
+      render: renderPngJpeg
+    };
 
-      var useLocalDecimalPoint = csvOpt.get("useLocalDecimalPoint");
+    steps.rendering[MIME_TYPES.JPEG] = {
+      preRender: preRenderImage,
+      render: renderPngJpeg
+    };
 
-      var csv = this.getCSV(useLocalDecimalPoint);
-      data.content = csv;
+    steps.rendering[MIME_TYPES.PDF] = {
+      preRender: preRenderImage,
+      render: renderPdf
+    };
 
-      if (hasCSVOptions) {
-        for (var i in optionsToCopy) {
-          optionToCopy = optionsToCopy[i];
-          if (csvOpt.get(optionToCopy)) {
-            this.options.exporting.csv[optionToCopy] = oldOptions[optionToCopy];
-          }
-        }
-      }
-      else {
-        delete this.options.exporting.csv;
-      }
-    }
-    else if (type == MIME_TYPES.XLS) {
-      // Same as above
-      var hasCSVOptions = this.options.exporting && this.options.exporting.csv;
-      var csvOpt = new Opt((options || {}).csv, (this.options.exporting || {}).csv, defaultExportOptions.csv);
+    var highChartsObject = this;
 
-      var oldOptions = {},
-          optionsToCopy = ["dateFormat"],
-          optionToCopy;
-      for (var i in optionsToCopy) {
-        optionToCopy = optionsToCopy[i];
-        if (csvOpt.get(optionToCopy)) {
-          if (!this.options.exporting) {
-            this.options.exporting = {};
-          }
-          if (!this.options.exporting.csv) {
-            this.options.exporting.csv = {};
-          }
-
-          oldOptions[optionToCopy] = this.options.exporting.csv[optionToCopy];
-          this.options.exporting.csv[optionToCopy] = csvOpt.get(optionToCopy);
-        }
-      }
-
-      var useLocalDecimalPoint = csvOpt.get("useLocalDecimalPoint");
-
-      var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
-        '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
-        '<x:Name>Sheet</x:Name>' +
-        '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
-        '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
-        '<meta name=ProgId content=Excel.Sheet>' +
-        '</head><body>' +
-        this.getTable(useLocalDecimalPoint) +
-        '</body></html>';
-      data.content = xls;
-
-      if (hasCSVOptions) {
-        for (var i in optionsToCopy) {
-          optionToCopy = optionsToCopy[i];
-          if (csvOpt.get(optionToCopy)) {
-            this.options.exporting.csv[optionToCopy] = oldOptions[optionToCopy];
-          }
-        }
-      }
-      else {
-        delete this.options.exporting.csv;
-      }
-    }
-    // Image processing
-    else {
-      var scale = opt.get("scale"),
-      sourceWidth = this.options.width || opt.get("sourceWidth") || this.chartWidth,
-      sourceHeight = this.options.height || opt.get("sourceHeight") || this.chartHeight,
-      destWidth = sourceWidth * scale,
-      destHeight = sourceHeight * scale;
-
-      var cChartOptions = chartOptions || this.options.exporting && this.options.exporting.chartOptions || {};
-      if (!cChartOptions.chart) {
-        cChartOptions.chart = { width: destWidth, height: destHeight };
-      }
-      else {
-        cChartOptions.chart.width = destWidth;
-        cChartOptions.chart.height = destHeight;
-      }
-
-      var svg = this.getSVG(cChartOptions);
-
-      if (type == MIME_TYPES.SVG) {
-        data.content = svg;
-      }
-      else if (type == MIME_TYPES.PNG || type == MIME_TYPES.JPEG) {
-        var canvas = svgToCanvas(svg, destWidth, destHeight);
-        data.datauri = browserSupportDownload && canvas.toDataURL && canvas.toDataURL(type);
-        data.blob = (type == MIME_TYPES.PNG) && !browserSupportDownload && canvas.msToBlob && canvas.msToBlob();
-      }
-      else if(type == MIME_TYPES.PDF) {
-        var canvas = svgToCanvas(svg, destWidth, destHeight);
-
-        var doc = new jsPDF('l', 'mm', [destWidth, destHeight]);;
-        doc.addImage(canvas, 'JPEG', 0, 0, destWidth, destHeight);
-
-        data.datauri = browserSupportDownload && doc.output('datauristring');
-        data.blob = !browserSupportDownload && doc.output('blob');
-      }
-    }
-
-    if (!data.content && !(data.datauri || data.blob)) {
-      throw new Error("Something went wrong while exporting the chart");
-    }
-
-    if (browserSupportDownload && (data.datauri || data.content)) {
-      a = document.createElement('a');
-      a.href = data.datauri || ('data:' + type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-    else if (browserSupportBlob && (data.blob || data.content)) {
-      blobObject = data.blob || new Blob([data.content], { type: type });
-      window.navigator.msSaveOrOpenBlob(blobObject, filename);
+    var context;
+    if(steps.rendering[type].preRender) {
+      context = steps.rendering[type].preRender(highChartsObject, options, chartOptions);
     }
     else {
-      window.open(data);
+      context = {};
     }
+
+    context.type = type;
+    context.filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
+    context.browserSupportDownload = browserSupportDownload;
+    context.browserSupportBlob = browserSupportBlob;
+
+    steps.rendering[type].render(highChartsObject, context, function(data) {
+      if(steps.rendering[type].postRender) {
+        steps.rendering[type].postRender(highChartsObject, context);
+      }
+
+      steps.download(highChartsObject, context, data);
+    });
   }
 
   // Forces method from export module to use the local version
