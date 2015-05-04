@@ -212,7 +212,7 @@
       // Copies some values from the options, so we can set it and change those
       // through the options argument.
       var hasCSVOptions = highChartsObject.options.exporting && highChartsObject.options.exporting.csv;
-      var csvOpt = new Opt((options || {}).csv, (highChartsObject.options.exporting || {}).csv, defaultExportOptions.csv);
+      var csvOpt = new Opt((options || {}).csv, (highChartsObject.options.exporting || {}).csv, defaultExportOptions.csv);
 
       var oldOptions = {},
       optionsToCopy = ["dateFormat", "itemDelimiter", "lineDelimiter"],
@@ -276,7 +276,7 @@
     };
 
   var postRenderCsvXls = function(highChartsObject, context) {
-      if (context.hasCSVOptions) {
+      if (context.hasCSVOptions) {
         for (var i in context.optionsToCopy) {
           optionToCopy = context.optionsToCopy[i];
           if (context.csvOpt.get(optionToCopy)) {
