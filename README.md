@@ -1,5 +1,5 @@
 # highcharts-export-clientside
-Module for [HighCharts](http://www.highcharts.com/) to exports charts client-side.
+Module for [HighCharts](http://www.highcharts.com/) to export charts client-side.
 
 Webpage for this project is here: http://a----.github.io/highcharts-export-clientside/
 
@@ -18,7 +18,7 @@ Additionally, it provides a common interface between the official export module 
 Dependencies are not shipped, so you'll have to do the following:
 
 ```(sh)
-bower install
+bower install highcharts-export-clientside
 ```
 
 Boom, you're done. Check the ```example.html``` file and mess with it.
@@ -41,7 +41,7 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 ## Remarks, Issues, Other stuff
 
 * ~~Rasterized images have an aspect ratio issue. I probably made a boo-boo somewhere.~~ That's fixed.
-* This probably won't work on Internet Explorer has it uses HTML5 download feature and opens a data-uri as a fallback. ~~But IE has limited data-uri support so who knows.~~ Nope, but there are some shim/sham/polyfills so that's possible to do.
+* This probably won't work on Internet Explorer as it uses HTML5 download feature and opens a data-uri as a fallback. ~~But IE has limited data-uri support so who knows.~~ Nope, but there are some shim/sham/polyfills so that's possible to do.
 * When exporting into PDF, `sourceWidth` and `sourceHeight` are expressed in millimeters.
 
 ## Changelog
