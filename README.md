@@ -1,5 +1,5 @@
 # highcharts-export-clientside
-Module for [HighCharts](http://www.highcharts.com/) to exports charts client-side.
+Module for [HighCharts](http://www.highcharts.com/) to export charts client-side.
 
 Webpage for this project is here: http://a----.github.io/highcharts-export-clientside/
 
@@ -13,17 +13,20 @@ You may need to export a chart you made using HighCharts to an image or a PDF. I
 
 Additionally, it provides a common interface between the official export module and `export-csv`.
 
-## Build / Install
+## Documentation
 
-Dependencies are not shipped, so you'll have to do the following:
+Want to give it a try in your project? Check its [Website](http://a----.github.io/highcharts-export-clientside/)
+for installation instructions.
+
+## Contribution
+
+First, fork the project and clone it. Then, since dependencies are not shipped, so you will have to do the following:
 
 ```(sh)
 bower install
 ```
 
-Boom, you're done. Check the ```example.html``` file and mess with it.
-
-Or just get `highcharts-export-clientside.js`.
+Check the ```example.html``` file and mess with it. Once you are done, please consider making a pull request.
 
 ## Dependencies
 
@@ -38,13 +41,13 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 
 <sup>1</sup> There are issues with canvg, title/subtitle appearing twice, this kind of things which `canvas-tools` fixes. So I'd suggest to go with this one.
 
-## Remarks, Issues, Other stuff
-
-* ~~Rasterized images have an aspect ratio issue. I probably made a boo-boo somewhere.~~ That's fixed.
-* This probably won't work on Internet Explorer has it uses HTML5 download feature and opens a data-uri as a fallback. ~~But IE has limited data-uri support so who knows.~~ Nope, but there are some shim/sham/polyfills so that's possible to do.
-* When exporting into PDF, `sourceWidth` and `sourceHeight` are expressed in millimeters.
-
 ## Changelog
+
+### v1.1.0 – 2015-07-03
+
+IE9 and below will not be supported in a near future and possibly any kind of future. Look at #4 for discussion on this matter.
+* Async rendering, fixes issues when chart includes resources (icons and the likes, #2)
+* Documentation fixes (#2)
 
 ### v1.0.1 – 2015-04-27
 
