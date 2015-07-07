@@ -43,10 +43,15 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 
 ## Changelog
 
+### v1.1.1 – 2015-07-03
+
+* Allow functions for the `exporting.filename` configuration option (#5)
+
 ### v1.1.0 – 2015-07-03
 
+Should have been done months ago, sorry.
 IE9 and below will not be supported in a near future and possibly any kind of future. Look at #4 for discussion on this matter.
-* Async rendering, fixes issues when chart includes resources (icons and the likes, #2)
+* Async rendering, fixes issues when chart includes resources (icons and the likes, #1)
 * Documentation fixes (#2)
 
 ### v1.0.1 – 2015-04-27
