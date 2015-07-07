@@ -67,7 +67,7 @@
         <i class="fa fa-github"></i> GitHub Project
       </a>
     </p>
-      <small class="pull-right text-muted">Current version: 1.0.1</small>
+      <small class="pull-right text-muted">Current version: 1.1.1</small>
   </div>
 </div>
 
@@ -334,7 +334,12 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
           <li>
             <code>filename</code>:
             <span class="label label-default">All Formats</span> String, defaults to <code>"chart"</code>.
-            Desired filename without the extension.
+            Desired filename without the extension.<br/>
+            <span class="label label-warning">Unoffical</span> Can also be a function. It will take two parameters,
+            <code>options</code> and <code>chartOptions</code> and will be binded to the current chart instance. It will
+            have to return a string, which will be the filename without its extension.<br/>
+            For your convenience, a constant <code>Highcharts.exporting.USE_TITLE_FOR_FILENAME</code> has been defined
+            and that returns and lowercase variation of the chart title.
           </li>
           <li>
             <code>chartOptions</code>:
@@ -413,6 +418,12 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
           <li><code>CSV</code>: <code>text/csv</code></li>
           <li><code>XLS</code>: <code>application/vnd.ms-excel</code></li>
         </ul>
+      </dd>
+
+      <dt><code>USE_TITLE_FOR_FILENAME</code></dt>
+      <dd>
+        An helper function to set to the <code>exporting.filename</code> configuration option that return a
+        lowercase variation of the chart title. Spaces are replaced by underscores.
       </dd>
 
       <dt><code>supports(mimeType)</code></dt>
@@ -511,10 +522,20 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
 
 <script src="bower_components/highcharts-export-clientside/highcharts-export-clientside.js"></script>
 
+<script>
+
+Highcharts.setOptions({
+  exporting: {
+    filename: Highcharts.exporting.USE_TITLE_FOR_FILENAME
+  }
+});
+</script>
+
 <script src="js/example1.js"></script>
 <script src="js/dependency-tree.js"></script>
 
 <script>
+
 $(".chart-export").each(function() {
   var jThis = $(this),
       chartSelector = jThis.data("chartSelector"),

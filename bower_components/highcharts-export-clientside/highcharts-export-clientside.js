@@ -62,6 +62,15 @@
    */
   H.exporting.MIME_TYPES = MIME_TYPES;
 
+  /**
+   * Little helper function that you can set to the `filename` configuration
+   * option to use the chart title for the filename when downloaded.
+   */
+  H.exporting.USE_TITLE_FOR_FILENAME = function(options, chartOptions) {
+    var title = this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart';
+    return title;
+  };
+
   var supportStatus = {};
   var buildSupportStatus = function() {
     var hasDownloadOrBlob = browserSupportDownload || browserSupportBlob;
@@ -445,9 +454,16 @@
     }
 
     context.type = type;
-    context.filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
     context.browserSupportDownload = browserSupportDownload;
     context.browserSupportBlob = browserSupportBlob;
+
+    var filename = opt.get("filename");
+    if(typeof filename === "function") {
+      context.filename = filename.bind(this)(options, chartOptions) + MIME_TYPE_TO_EXTENSION[type];
+    }
+    else {
+      context.filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
+    }
 
     steps.rendering[type].render(highChartsObject, context, function(data) {
       if(steps.rendering[type].postRender) {
