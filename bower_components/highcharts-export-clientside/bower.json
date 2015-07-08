@@ -1,7 +1,7 @@
 {
   "name": "highcharts-export-clientside",
   "main": "highcharts-export-clientside.js",
-  "version": "1.0.1",
+  "version": "1.1.1",
   "homepage": "https://github.com/A----/highcharts-export-clientside",
   "authors": [
     "A---- <A----@users.noreply.github.com>"
@@ -32,12 +32,12 @@
     "example.html"
   ],
   "dependencies": {
-    "jspdf": "~1.0.272",
-    "highcharts": "~4.1.1",
+    "jspdf": "^1.0.272",
+    "highcharts": "^4.1.1",
     "export-csv": "https://github.com/highslide-software/export-csv.git"
   },
   "devDependencies": {
-    "bootstrap": "~3.3.2",
+    "bootstrap": "^3.3.2",
     "jquery": "^1.9.0"
   }
 }

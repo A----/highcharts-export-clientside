@@ -1,8 +1,10 @@
 #jsPDF
 
+[![Inline docs](http://inch-ci.org/github/MrRio/jsPDF.svg?branch=master)](http://inch-ci.org/github/MrRio/jsPDF)
+
 **Generate PDF files in client-side JavaScript.**
 
-You can [catch me on twitter](http://twitter.com/MrRio): [@MrRio](http://twitter.com/MrRio) or head over to [my company's website](http://snapshotmedia.co.uk) for consultancy. 
+You can [catch me on twitter](http://twitter.com/MrRio): [@MrRio](http://twitter.com/MrRio) or head over to [my company's website](http://parall.ax) for consultancy. 
 
 ## Creating your first document
 
@@ -22,6 +24,20 @@ doc.save('Test.pdf');
 ```bash
 git clone --recursive git://github.com/MrRio/jsPDF.git
 ```
+
+## Building
+
+To build, simply run the 'make' command. This will fetch all npm and bower deps, then compile minified JS files.
+
+## Running locally
+
+Due to certain restrictions that local files have, you'll need to run a web server. Just run:
+
+```
+npm start
+```
+
+You can then access the site at localhost:8000
 
 ## Credits
 

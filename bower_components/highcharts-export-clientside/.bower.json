@@ -31,19 +31,19 @@
     "example.html"
   ],
   "dependencies": {
-    "jspdf": "~1.0.272",
-    "highcharts": "~4.1.1",
+    "jspdf": "^1.0.272",
+    "highcharts": "^4.1.1",
     "export-csv": "https://github.com/highslide-software/export-csv.git"
   },
   "devDependencies": {
-    "bootstrap": "~3.3.2",
+    "bootstrap": "^3.3.2",
     "jquery": "^1.9.0"
   },
-  "_release": "3ba7b4d644",
+  "_release": "4d9cf503f3",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "3ba7b4d64476fce0bc86c52e01acf5e484ddf16c"
+    "commit": "4d9cf503f37015a617ea63dfd52eb59b7e2ef844"
   },
   "_source": "https://github.com/A----/highcharts-export-clientside.git",
   "_target": "master",
