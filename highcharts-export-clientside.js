@@ -67,7 +67,7 @@
    * option to use the chart title for the filename when downloaded.
    */
   H.exporting.USE_TITLE_FOR_FILENAME = function(options, chartOptions) {
-    var title = this.chart.title ? chart.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart';
+    var title = this.title ? this.title.textStr.replace(/ /g, '-').toLowerCase() : 'chart';
     return title;
   };
 
