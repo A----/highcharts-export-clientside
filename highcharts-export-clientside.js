@@ -169,9 +169,11 @@
     canvas.setAttribute('width', width);
     canvas.setAttribute('height', height);
 
-    canvas.getContext('2d').drawSvg(svg, 0, 0, width, height);
-
     canvg(canvas, svg, {
+      ignoreMouse: true,
+			ignoreAnimation: true,
+			ignoreDimensions: true,
+			ignoreClear: true,
       offsetX: 0,
       offsetY: 0,
       scaleWidth: width,
