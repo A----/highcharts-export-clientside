@@ -1,17 +1,17 @@
 {
   "name": "highcharts",
-  "version": "4.1.7",
+  "version": "4.1.8",
   "main": [
     "highcharts.js",
     "highcharts-more.js",
     "modules/exporting.js"
   ],
   "homepage": "https://github.com/highslide-software/highcharts-release",
-  "_release": "4.1.7",
+  "_release": "4.1.8",
   "_resolution": {
     "type": "version",
-    "tag": "v4.1.7",
-    "commit": "a8b899c6fcfbb1e1d51331052159d3d8e1b84b84"
+    "tag": "v4.1.8",
+    "commit": "c08b649fe200d4799c1034e85fe103a432b1b5db"
   },
   "_source": "git://github.com/highslide-software/highcharts-release.git",
   "_target": "^4.1.1",

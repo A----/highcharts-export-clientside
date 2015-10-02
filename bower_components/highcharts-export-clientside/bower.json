@@ -1,8 +1,8 @@
 {
   "name": "highcharts-export-clientside",
   "main": "highcharts-export-clientside.js",
-  "version": "1.1.1",
-  "homepage": "https://github.com/A----/highcharts-export-clientside",
+  "version": "1.1.3",
+  "homepage": "http://a----.github.io/highcharts-export-clientside/",
   "authors": [
     "A---- <A----@users.noreply.github.com>"
   ],

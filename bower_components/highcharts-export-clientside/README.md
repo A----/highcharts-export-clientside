@@ -43,11 +43,20 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 
 ## Changelog
 
-### v1.1.1 – 2015-07-03
+### v1.1.3 – 2015-10-02
+
+* Fixing an issue where the exported image would be cropped when both `scale` and `sourceWidth`/`sourceHeight` have been specified (#16)
+
+### v1.1.2 – 2015-07-08
+
+* Fixing issue in provided helper function for `exporting.filename` configuration option (#7)
+* Wider range of dependencies versions in `bower.json` (#6)
+
+### v1.1.1 – 2015-07-07
 
 * Allow functions for the `exporting.filename` configuration option (#5)
 
-### v1.1.0 – 2015-07-03
+### v1.1.0 – 2015-07-07
 
 Should have been done months ago, sorry.
 IE9 and below will not be supported in a near future and possibly any kind of future. Look at #4 for discussion on this matter.

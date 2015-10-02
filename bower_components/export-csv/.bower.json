@@ -1,11 +1,17 @@
 {
-  "name": "export-csv",
+  "name": "Highcharts export-csv plugin",
+  "main": "export-csv.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "README.md"
+  ],
   "homepage": "https://github.com/highslide-software/export-csv",
-  "_release": "92f1cca88b",
+  "_release": "a91b014fb5",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "92f1cca88bfa73022723cde6c75814a3dd41afdb"
+    "commit": "a91b014fb5f87d6c7ab64171d413e912cb92bde3"
   },
   "_source": "https://github.com/highslide-software/export-csv.git",
   "_target": "*",
