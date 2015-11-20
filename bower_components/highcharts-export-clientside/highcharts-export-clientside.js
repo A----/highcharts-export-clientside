@@ -46,6 +46,11 @@
   TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadCSV || 'Download CSV'] = "text/csv";
   TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadXLS || 'Download XLS'] = "application/vnd.ms-excel";
 
+  // UTF-8 BOM. Excel might not read accentuated characters when this is not present
+  // https://en.wikipedia.org/wiki/Byte_order_mark
+  // http://stackoverflow.com/questions/17879198/adding-utf-8-bom-to-string-blob
+  var UTF8_BOM = "\ufeff";
+
   // This var indicates if the browser supports HTML5 download feature
   var browserSupportDownload = false;
   var a = document.createElement('a');
@@ -215,11 +220,14 @@
     scale: 2,
     filename: "chart",
     csv: {
+      useBOM: MIME_TYPES.XLS,
       useLocalDecimalPoint: true
     }
   };
 
   var preRenderCsvXls = function (highChartsObject, options, chartOptions) {
+      var opt = new Opt(options, highChartsObject.options.exporting, defaultExportOptions);
+
       // Copies some values from the options, so we can set it and change those
       // through the options argument.
       var hasCSVOptions = highChartsObject.options.exporting && highChartsObject.options.exporting.csv;
@@ -247,6 +255,7 @@
         hasCSVOptions: hasCSVOptions,
         csvOpt: csvOpt,
         useLocalDecimalPoint: csvOpt.get("useLocalDecimalPoint"),
+        useBOM: csvOpt.get("useBOM") == true || csvOpt.get("useBOM") == opt.get("type");
         optionsToCopy: optionsToCopy,
         oldOptions: oldOptions
       };
@@ -259,7 +268,7 @@
           blob: undefined
         };
 
-      var csv = highChartsObject.getCSV(context.useLocalDecimalPoint);
+      var csv = (context.useBOM ? UTF8_BOM : '') + highChartsObject.getCSV(context.useLocalDecimalPoint);
       data.content = csv;
 
       callback(data);
@@ -272,7 +281,8 @@
           blob: undefined
         };
 
-      var xls = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
+      var xls = (context.useBOM ? UTF8_BOM : '') + '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"'+
+          'xmlns="http://www.w3.org/TR/REC-html40">' +
         '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
         '<x:Name>Sheet</x:Name>' +
         '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
