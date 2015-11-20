@@ -255,7 +255,7 @@
         hasCSVOptions: hasCSVOptions,
         csvOpt: csvOpt,
         useLocalDecimalPoint: csvOpt.get("useLocalDecimalPoint"),
-        useBOM: csvOpt.get("useBOM") == true || csvOpt.get("useBOM") == opt.get("type");
+        useBOM: csvOpt.get("useBOM") == true || csvOpt.get("useBOM") == opt.get("type"),
         optionsToCopy: optionsToCopy,
         oldOptions: oldOptions
       };

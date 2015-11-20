@@ -43,6 +43,10 @@ The only dependencies you must use are HighCharts and HighCharts exporting modul
 
 ## Changelog
 
+### v1.1.4 – 2015-11-20
+
+* New option to add BOM to CSV/XLS files. This fixes an issue in Microsoft Excel where file encoding sometimes where not recognized properly (#20)
+
 ### v1.1.3 – 2015-10-02
 
 * Fixing an issue where the exported image would be cropped when both `scale` and `sourceWidth`/`sourceHeight` have been specified (#16)
