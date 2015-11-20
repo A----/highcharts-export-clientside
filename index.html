@@ -67,7 +67,7 @@
         <i class="fa fa-github"></i> GitHub Project
       </a>
     </p>
-      <small class="pull-right text-muted">Current version: 1.1.3</small>
+      <small class="pull-right text-muted">Current version: 1.1.4</small>
   </div>
 </div>
 
@@ -320,11 +320,13 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
   sourceWidth: &lt;chart.width&gt;,
   sourceHeight: &lt;chart.height&gt;,
   scale: 2,
+  type: MIME_TYPES.PNG
   csv: {
+    useBOM: MIME_TYPES.XLS,
     useLocalDecimalPoint: true,
     dateFormat: "%Y-%m-%d %H:%M:%S",
     itemDelimiter: ",",
-    itemDelimiter: "\n",
+    lineDelimiter: "\n",
   }
 }</pre>
         <br />
@@ -335,9 +337,9 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
             <code>filename</code>:
             <span class="label label-default">All Formats</span> String, defaults to <code>"chart"</code>.
             Desired filename without the extension.<br/>
-            <span class="label label-warning">Unoffical</span> Can also be a function. It will take two parameters,
-            <code>options</code> and <code>chartOptions</code> and will be binded to the current chart instance. It will
-            have to return a string, which will be the filename without its extension.<br/>
+            <span class="label label-warning">Unoffical</span> <span class="label label-success">1.1.1</span> Can also be a function.
+            It will take two parameters, <code>options</code> and <code>chartOptions</code> and will be binded to the current chart
+            instance. It will have to return a string, which will be the filename without its extension.<br/>
             For your convenience, a constant <code>Highcharts.exporting.USE_TITLE_FOR_FILENAME</code> has been defined
             and that returns and lowercase variation of the chart title.
           </li>
@@ -357,6 +359,20 @@ if(Highcharts.exporting.supports(Highcharts.exporting.MIME_TYPES.XLS)) {
             <code>scale</code>:
             <span class="label label-default">SVG, PNG, JPEG, PDF</span> Integer, defaults to <code>2</code>.
             Multiplying factor to the dimension of the exported image.
+          </li>
+          <li>
+            <code>type</code>
+            <span class="label label-default">All Formats</span> String, defaults to <code>"image/png"</code>.
+            MIME type of the desired export format. See <code>MIME_TYPES.*</code>.
+          </li>
+          <li>
+            <code>csv.useBOM</code>:
+            <span class="label label-default">CSV, XLS</span> <span class="label label-warning">Unoffical</span>
+             <span class="label label-success">1.1.4</span>
+            Boolean or String, defaults to <code>MIME_TYPES.XLS</code>.
+            If <code>true</code> or of the MIME type of the current export format, it will prepend the
+            <a href="https://en.wikipedia.org/wiki/Byte_order_mark">UTF-8 BOM</a>. This is unofficial and not compliant with <code>export-csv</code>
+            module but has been known to cause issues on accentuated when opening file in Microsoft Excel.
           </li>
           <li>
             <code>csv.useLocalDecimalPoint</code>:
