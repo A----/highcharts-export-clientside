@@ -482,7 +482,7 @@
         steps.rendering[type].postRender(highChartsObject, context);
       }
 
-      steps.download(highChartsObject, context, data);
+      (opt.get('download')||steps.download)(highChartsObject, context, data);
     });
   }
 
