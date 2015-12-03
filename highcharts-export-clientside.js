@@ -41,7 +41,9 @@
     "downloadPDF": "application/pdf",
     "downloadPNG": "image/png",
     "downloadJPEG": "image/jpeg",
-    "downloadSVG": "image/svg+xml"
+    "downloadSVG": "image/svg+xml",
+    "downloadCSV": "text/csv",
+    "downloadXLS": "application/vnd.ms-excel"
   };
   TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadCSV || 'Download CSV'] = "text/csv";
   TRANSLATION_KEY_TO_MIME_TYPES[H.getOptions().lang.downloadXLS || 'Download XLS'] = "application/vnd.ms-excel";
