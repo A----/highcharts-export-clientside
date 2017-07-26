@@ -477,12 +477,18 @@
       context.filename = opt.get("filename") + MIME_TYPE_TO_EXTENSION[type];
     }
 
-    steps.rendering[type].render(highChartsObject, context, function(data) {
-      if(steps.rendering[type].postRender) {
-        steps.rendering[type].postRender(highChartsObject, context);
-      }
 
-      steps.download(highChartsObject, context, data);
+    return new Promise(function(resolve, reject){
+        steps.rendering[type].render(highChartsObject, context, function(data) {
+            if(steps.rendering[type].postRender) {
+                steps.rendering[type].postRender(highChartsObject, context);
+            }
+
+            if(opt.get("rawdata") === true) {
+                return resolve(data);
+            }
+            else return resolve(steps.download(highChartsObject, context, data));
+        });
     });
   }
 
