@@ -390,17 +390,17 @@
       throw new Error("Something went wrong while exporting the chart");
     }
 
-    if (context.browserSupportDownload && (data.datauri || data.content)) {
-      a = document.createElement('a');
-      a.href = data.datauri || ('data:' + context.type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
-      a.download = context.filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-    }
-    else if (context.browserSupportBlob && (data.blob || data.content)) {
+    if (context.browserSupportBlob && (data.blob || data.content)) {
       blobObject = data.blob || new Blob([data.content], { type: context.type });
       window.navigator.msSaveOrOpenBlob(blobObject, context.filename);
+    }
+    else if (context.browserSupportDownload && (data.datauri || data.content)) {
+        a = document.createElement('a');
+        a.href = data.datauri || ('data:' + context.type + ';base64,' + window.btoa(unescape(encodeURIComponent(data.content))));
+        a.download = context.filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
     }
     else {
       window.open(data);
