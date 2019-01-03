@@ -374,7 +374,7 @@
         };
 
       svgToCanvas(context.svg, context.destWidth, context.destHeight, function(canvas) {
-        var doc = new jsPDF('l', 'mm', [context.destWidth, context.destHeight]);;
+        var doc = new jsPDF('p', 'mm', [context.destWidth, context.destHeight]);;
         doc.addImage(canvas, 'JPEG', 0, 0, context.destWidth, context.destHeight);
 
         data.datauri = context.browserSupportDownload && doc.output('datauristring');
